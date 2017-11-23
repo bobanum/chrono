@@ -3,7 +3,7 @@ body {
   font-family: verdana;
   background-color: black;
 }
-*#temps {
+#temps {
   font-family: monospace;
   font-size: 144px;
   font-weight: bold;
@@ -16,7 +16,7 @@ body {
   padding: 60px 0px;
   background-color: #666;
 }
-*#temps span.temps {
+#temps span.temps {
   padding: 10px 10px;
   color: white;
   border-radius: 15px;
@@ -49,4 +49,9 @@ body {
 }
 #duree:not(:hover) {
   opacity: .2;
+}
+#duree fieldset {
+  border: none;
+  margin: 0;
+  display: inline;
 }
