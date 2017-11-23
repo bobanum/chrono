@@ -1,6 +1,6 @@
 body {
-    background: url("fond.png");
     font-family: verdana;
+    background-color: black;
 }
 *#temps {
     font-family: monospace;
@@ -11,37 +11,46 @@ body {
     border: 5px inset black;
     width: 800px;
     margin: 0px auto;
-    -moz-border-radius: 60px;
+    border-radius: 60px;
     padding: 60px 0px;
     background-color: #666;
     & span.temps {
-        padding: 10px 0px;
-        color: black;
-        -moz-border-radius: 15px;
-        background-image: url(courbe.png);
+        padding: 10px 10px;
+        color: white;
+        border-radius: 15px;
+        box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.8) inset;
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.5),
+            rgba(255, 255, 255, 0) 50%,
+            rgba(0, 0, 0, 0) 50%,
+            rgba(0, 0, 0, 0.5)
+        );
         background-repeat: repeat-x;
         background-position: left center;
         border: 1px outset black;
     }
 }
 #heures {
-    background-color: #fcc;
+    background-color: #600;
 }
 #minutes {
-    background-color: #ccf;
+    background-color: #060;
 }
 #secondes {
-    background-color: #cfc;
+    background-color: #006;
 }
 #duree {
-    background-color: #FFEFCE;
-    color: #665635;
-    border: 1px solid;
+    background-color: #666;
+    color: #fff;
+    zzzborder: 1px solid;
     padding: 10px;
     margin: 20px auto;
     width: 600px;
     font-weight: bold;
-}
-#duree input[type=button] {
-    width: 100px;
+    & input[type=button] {
+        width: 100px;
+    }
+    &:not(:hover) {
+        opacity: .2;
+    }
 }
