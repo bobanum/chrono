@@ -2,7 +2,6 @@
 /*exported Chrono*/
 /*globals*/
 class Chrono {
-
     static dom_temps() {
         var resultat, span;
 		resultat = document.createElement("div");
@@ -30,16 +29,25 @@ class Chrono {
     }
 
     static dom_formulaire() {
-        var resultat, fieldset;
+        var resultat;
 		resultat = document.createElement("form");
 		resultat.setAttribute("id", "duree");
 		resultat.setAttribute("name", "duree");
-		fieldset = resultat.appendChild(this.dom_duree());
-		resultat.appendChild(this.dom_boutonDemarrer());
-		resultat.appendChild(this.dom_boutonPause());
-		resultat.appendChild(this.dom_selectSon(["Heyhey", "Tubular Bell", "Sabre Dance", "Holiday", "Borderline", "Lucky Star", "Tarkus", "James Bond"], "tubularbell"));
+		resultat.appendChild(this.dom_duree());
+		resultat.appendChild(this.dom_boutons());
+		resultat.appendChild(this.dom_selectSon());
 		this.form = resultat;
 		resultat.obj = this;
+        return resultat;
+    }
+
+    static dom_boutons() {
+        var resultat;
+		resultat = document.createElement("fieldset");
+		resultat.appendChild(this.dom_btDemarrer());
+		resultat.appendChild(this.dom_btArreter());
+		resultat.appendChild(this.dom_btPause());
+		resultat.appendChild(this.dom_btRedemarrer());
         return resultat;
     }
 
@@ -74,18 +82,33 @@ class Chrono {
         return resultat;
     }
 
-    static dom_boutonDemarrer() {
+    static dom_btDemarrer() {
         var resultat;
 		resultat = document.createElement("input");
 		resultat.setAttribute("id", "btDemarrer");
 		resultat.setAttribute("type", "button");
 		resultat.setAttribute("value", "Démarrer");
 		resultat.setAttribute("accesskey", "D");
-		resultat.addEventListener("click", this.evt.demarrer.click);
+		resultat.addEventListener("click", this.evt.btDemarrer.click);
+		this.btDemarrer = resultat;
+		resultat.obj = this;
+		return resultat;
+    }
+    static dom_btArreter() {
+        var resultat;
+		resultat = document.createElement("input");
+		resultat.setAttribute("id", "btArreter");
+		resultat.setAttribute("type", "button");
+		resultat.setAttribute("value", "Arrêter");
+		resultat.setAttribute("accesskey", "A");
+		resultat.setAttribute("disabled", "disabled");
+		resultat.addEventListener("click", this.evt.btArreter.click);
+		this.btArreter = resultat;
+		resultat.obj = this;
 		return resultat;
     }
 
-    static dom_boutonPause() {
+    static dom_btPause() {
         var resultat;
         resultat = document.createElement("input");
 		resultat.setAttribute("id", "btPause");
@@ -93,23 +116,38 @@ class Chrono {
 		resultat.setAttribute("value", "Pause");
 		resultat.setAttribute("disabled", "disabled");
 		resultat.setAttribute("accesskey", "P");
-		resultat.addEventListener("click", this.evt.pause.click);
+		resultat.addEventListener("click", this.evt.btPause.click);
+		this.btPause = resultat;
+		resultat.obj = this;
+		return resultat;
+    }
+    static dom_btRedemarrer() {
+        var resultat;
+        resultat = document.createElement("input");
+		resultat.setAttribute("id", "btRedemarrer");
+		resultat.setAttribute("type", "button");
+		resultat.setAttribute("value", "Redémarrer");
+		resultat.setAttribute("disabled", "disabled");
+		resultat.setAttribute("accesskey", "R");
+		resultat.addEventListener("click", this.evt.btRedemarrer.click);
+		this.btRedemarrer = resultat;
+		resultat.obj = this;
 		return resultat;
     }
 
-    static dom_selectSon(liste, defaut) {
-        var resultat;
-		defaut = defaut || "";
-        resultat = document.createElement("select");
-		resultat.setAttribute("id", "choixson");
-		resultat.setAttribute("name", "choixson");
-        for (let i = 0, n = liste.length; i < n; i += 1) {
-            let nomson = liste[i].replace(" ", "").toLowerCase();
-            let option = resultat.appendChild(document.createElement("option"));
-		   option.setAttribute("value", nomson);
-		   option.textContent = liste[i];
+    static dom_selectSon() {
+        var resultat, select;
+        resultat = document.createElement("fieldset");
+		select = resultat.appendChild(document.createElement("select"));
+		select.setAttribute("id", "choixson");
+		select.setAttribute("name", "choixson");
+        for (let i = 0, n = this.sons.length; i < n; i += 1) {
+			let nomson = this.sons[i].replace(" ", "").toLowerCase();
+			let option = select.appendChild(document.createElement("option"));
+			option.setAttribute("value", nomson);
+			option.textContent = this.sons[i];
         }
-        resultat.valul = defaut;
+        select.value = this.sonDefaut;
         return resultat;
     }
 
@@ -211,45 +249,55 @@ class Chrono {
     }
 
     static init() {
-        this.evt = {
-            demarrer: {
+		this.sons = ["Heyhey", "Tubular Bell", "Sabre Dance", "Holiday", "Borderline", "Lucky Star", "Tarkus", "James Bond"];
+		this.sons.sort();
+		this.sonDefaut = "tubularbell";
+		this.evt = {
+            btDemarrer: {
                 click: function() {
-                    var btPause = document.getElementById("btPause");
                     var temps = document.getElementById("temps");
-                    if (this.value === "Démarrer") {
-                        var sec = Chrono.prendreDuree();
-                        if (sec) {
-                            this.value = "Arrêter";
-                            btPause.removeAttribute('disabled');
-                            temps.ajuster(sec);
-                            temps.interval = window.setInterval(Chrono.intTemps, 100);
-                            document.getElementById("son").setAttribute("src", "");
-                            Chrono.duree.setAttribute("disabled", "disabled");
-                        }
-                    } else {
-                        this.value = "Démarrer";
-                        window.clearInterval(temps.interval);
-                        temps.duree = 0;
-                        Chrono.appliquerTemps();
-                        // $temps[0].ajuster();
-                        document.getElementById("son").setAttribute("src", "");
-                        btPause.value = "Pause";
-						btPause.setAttribute("disabled", "disabled");
-                        Chrono.duree.removeAttribute("disabled");
-                    }
+					var sec = Chrono.prendreDuree();
+					if (sec) {
+						temps.ajuster(sec);
+						temps.interval = window.setInterval(this.obj.intTemps, 100);
+						document.getElementById("son").setAttribute("src", "");
+						this.setAttribute("disabled", "disabled");
+						this.obj.btPause.removeAttribute('disabled');
+						this.obj.btArreter.removeAttribute('disabled');
+						this.obj.duree.setAttribute("disabled", "disabled");
+					}
                 }
             },
-            pause: {
+            btArreter: {
                 click: function() {
                     var temps = document.getElementById("temps");
-                    if (this.value === "Pause") {
-                        this.value = "Redémarrer";
-                        window.clearInterval(temps.interval);
-                    } else {
-                        this.value = "Pause";
-                        temps.ajuster(temps.duree);
-                        temps.interval = window.setInterval(Chrono.intTemps, 400);
-                    }
+					window.clearInterval(temps.interval);
+					temps.duree = 0;
+					this.obj.appliquerTemps();
+					// $temps[0].ajuster();
+					document.getElementById("son").setAttribute("src", "");
+					this.setAttribute("disabled", "disabled");
+					this.obj.btPause.setAttribute("disabled", "disabled");
+					this.obj.btRedemarrer.setAttribute("disabled", "disabled");
+					this.obj.btDemarrer.removeAttribute("disabled");
+					this.obj.duree.removeAttribute("disabled");
+                }
+            },
+            btPause: {
+                click: function() {
+                    var temps = document.getElementById("temps");
+					this.setAttribute("disabled", "disabled");
+					this.obj.btRedemarrer.removeAttribute("disabled");
+					window.clearInterval(temps.interval);
+                }
+            },
+            btRedemarrer: {
+                click: function() {
+                    var temps = document.getElementById("temps");
+					this.obj.btPause.removeAttribute("disabled");
+					this.setAttribute("disabled", "disabled");
+					temps.ajuster(temps.duree);
+					temps.interval = window.setInterval(this.obj.intTemps, 400);
                 }
             }
         };

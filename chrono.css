@@ -35,23 +35,25 @@ body {
 #secondes {
   background-color: #006;
 }
-#duree {
+form#duree {
   background-color: #666;
   color: #fff;
-  zzzborder: 1px solid;
   padding: 10px;
   margin: 20px auto;
-  width: 600px;
+  width: 700px;
   font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-#duree input[type=button] {
-  width: 100px;
+form#duree input[type=button] {
+  width: 80px;
 }
-#duree:not(:hover) {
-  opacity: .2;
-}
-#duree fieldset {
+form#duree fieldset {
   border: none;
   margin: 0;
   display: inline;
+}
+form#duree input[disabled] {
+  display: none;
 }
