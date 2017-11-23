@@ -1,100 +1,119 @@
 /*jslint browser:true, esnext:true*/
 /*exported Chrono*/
-/*globals $*/
+/*globals*/
 class Chrono {
 
-    static creerTemps() {
-        var temps = $(document.createElement("div"))
-            .attr("id", "temps")
-            .append($(document.createElement("span"))
-                .attr("id", "heures")
-                .addClass("temps")
-                .html("00")
-            )
-            .append($(document.createElement("span")).html(":"))
-            .append($(document.createElement("span"))
-                .attr("id", "minutes")
-                .addClass("temps")
-                .html("00")
-            )
-            .append($(document.createElement("span")).html(":"))
-            .append($(document.createElement("span"))
-                .attr("id", "secondes")
-                .addClass("temps")
-                .html("00")
-            );
-        temps[0].ajuster = this.ajusterTemps;
-        return temps;
+    static dom_temps() {
+        var resultat, span;
+		resultat = document.createElement("div");
+        resultat.setAttribute("id", "temps");
+		span = resultat.appendChild(document.createElement("span"));
+        span.setAttribute("id", "heures");
+        span.classList.add("temps");
+        span.innerHTML = "00";
+        span = resultat.appendChild(document.createElement("span"));
+		span.innerHTML = ":";
+        span = resultat.appendChild(document.createElement("span"));
+		span.setAttribute("id", "minutes");
+		span.classList.add("temps");
+		span.innerHTML = "00";
+        span = resultat.appendChild(document.createElement("span"));
+		span.innerHTML = ":";
+        span = resultat.appendChild(document.createElement("span"));
+		span.setAttribute("id", "secondes");
+		span.classList.add("temps");
+		span.innerHTML = "00";
+        resultat.ajuster = this.ajusterTemps;
+		this.temps = resultat;
+		resultat.obj = this;
+        return resultat;
     }
 
-    static creerFormulaire() {
-        var form = $(document.createElement("form"))
-            .attr("id", "duree")
-            .attr("name", "duree")
-            .css("text-align", "center")
-            .append($(document.createElement("span")).text("Durée : "))
-            .append(this.creerSelect("selectheures", 0, 5).addClass("selectduree"))
-            .append(this.creerSelect("selectminutes", 0, 60, 3).addClass("selectduree"))
-            .append(this.creerSelect("selectsecondes", 0, 60, 0).addClass("selectduree"))
-            .append(this.creerBoutonDemarrer())
-            .append(this.creerBoutonPause())
-            .append(this.creerSelectSon(["Heyhey", "Tubular Bell", "Sabre Dance", "Holiday", "Borderline", "Lucky Star", "Tarkus", "James Bond"], "tubularbell"));
-        return form;
+    static dom_formulaire() {
+        var resultat, fieldset;
+		resultat = document.createElement("form");
+		resultat.setAttribute("id", "duree");
+		resultat.setAttribute("name", "duree");
+		fieldset = resultat.appendChild(this.dom_duree());
+		resultat.appendChild(this.dom_boutonDemarrer());
+		resultat.appendChild(this.dom_boutonPause());
+		resultat.appendChild(this.dom_selectSon(["Heyhey", "Tubular Bell", "Sabre Dance", "Holiday", "Borderline", "Lucky Star", "Tarkus", "James Bond"], "tubularbell"));
+		this.form = resultat;
+		resultat.obj = this;
+        return resultat;
+    }
+
+    static dom_duree() {
+        var resultat, span;
+		resultat = document.createElement("fieldset");
+		span = resultat.appendChild(document.createElement("span"));
+		span.textContent = "Durée : ";
+		resultat.appendChild(this.creerSelect("selectheures", 0, 5));
+		resultat.appendChild(this.creerSelect("selectminutes", 0, 60, 3));
+		resultat.appendChild(this.creerSelect("selectsecondes", 0, 60, 0));
+		this.duree = resultat;
+		resultat.obj = this;
+        return resultat;
     }
 
     static creerSelect(nom, debut, fin, value) {
-        value = value || 0;
+        var resultat;
+		value = value || 0;
         fin = fin || 60;
         debut = debut || 0;
-        var select = $(document.createElement("select"))
-            .attr("id", nom)
-            .attr("name", nom);
-        for (var i = debut; i <= fin; i++) {
-            select.append($(document.createElement("option"))
-                .attr("value", i)
-                .text(("00" + i).substr(("00" + i).length - 2))
-            );
+        resultat = document.createElement("select");
+		resultat.setAttribute("id", nom);
+		resultat.setAttribute("name", nom);
+        for (let i = debut; i <= fin; i += 1) {
+            let option = resultat.appendChild(document.createElement("option"));
+			option.setAttribute("value", i);
+			option.textContent = (("00" + i).substr(("00" + i).length - 2));
         }
-        select.val(value).bind("change", this.appliquerTemps);
-        return select;
+        resultat.value = value;
+		resultat.addEventListener("change", this.appliquerTemps);
+        return resultat;
     }
 
-    static creerBoutonDemarrer() {
-        return $(document.createElement("input"))
-            .attr("id", "btDemarrer")
-            .attr("type", "button")
-            .attr("value", "Démarrer")
-            .attr("accesskey", "D")
-            .bind(this.evt.demarrer);
+    static dom_boutonDemarrer() {
+        var resultat;
+		resultat = document.createElement("input");
+		resultat.setAttribute("id", "btDemarrer");
+		resultat.setAttribute("type", "button");
+		resultat.setAttribute("value", "Démarrer");
+		resultat.setAttribute("accesskey", "D");
+		resultat.addEventListener("click", this.evt.demarrer.click);
+		return resultat;
     }
 
-    static creerBoutonPause() {
-        return $(document.createElement("input"))
-            .attr("id", "btPause")
-            .attr("type", "button")
-            .attr("value", "Pause")
-            .attr("disabled", "disabled")
-            .attr("accesskey", "P")
-            .bind(this.evt.pause);
+    static dom_boutonPause() {
+        var resultat;
+        resultat = document.createElement("input");
+		resultat.setAttribute("id", "btPause");
+		resultat.setAttribute("type", "button");
+		resultat.setAttribute("value", "Pause");
+		resultat.setAttribute("disabled", "disabled");
+		resultat.setAttribute("accesskey", "P");
+		resultat.addEventListener("click", this.evt.pause.click);
+		return resultat;
     }
 
-    static creerSelectSon(liste, defaut) {
-        defaut = defaut || "";
-        var select = $(document.createElement("select"))
-            .attr("id", "choixson")
-            .attr("name", "choixson");
-        for (var i = 0; i < liste.length; i++) {
-            var nomson = liste[i].replace(" ", "").toLowerCase();
-            select.append($(document.createElement("option"))
-                .attr("value", nomson)
-                .text(liste[i])
-            );
+    static dom_selectSon(liste, defaut) {
+        var resultat;
+		defaut = defaut || "";
+        resultat = document.createElement("select");
+		resultat.setAttribute("id", "choixson");
+		resultat.setAttribute("name", "choixson");
+        for (let i = 0, n = liste.length; i < n; i += 1) {
+            let nomson = liste[i].replace(" ", "").toLowerCase();
+            let option = resultat.appendChild(document.createElement("option"));
+		   option.setAttribute("value", nomson);
+		   option.textContent = liste[i];
         }
-        select.val(defaut);
-        return select;
+        resultat.valul = defaut;
+        return resultat;
     }
 
-    static creerSon() {
+    static dom_son() {
         /*var obj = document.createElement("object");
         obj.classid = "CLSID:05589FA1-C356-11CE-BF01-00AA0055595A";
         obj.height = "0";
@@ -113,34 +132,37 @@ class Chrono {
         param.name = "Volume";
         param.value = "7";
         return obj;*/
-        var obj = $(document.createElement("embed"))
-            .attr({
-                id: "son",
-                type: "audio/midi",
-                width: 0,
-                height: 0,
-                src: "",
-                controller: false,
-                hidden: true,
-                autoplay: true,
-                volume: 100,
-            });
-        return obj;
+		var resultat;
+        resultat = document.createElement("embed");
+		resultat.setAttribute("id", "son");
+		resultat.setAttribute("type", "audio/midi");
+		resultat.setAttribute("width", 0);
+		resultat.setAttribute("height", 0);
+		resultat.setAttribute("src", "");
+		resultat.setAttribute("controller", false);
+		resultat.setAttribute("hidden", true);
+		resultat.setAttribute("autoplay", true);
+		resultat.setAttribute("volume", 100);
+        return resultat;
     }
 
     static intTemps() {
-        var $temps = $("#temps");
-        $temps[0].ajuster();
-        if ($temps[0].duree <= 0) {
-            $temps[0].duree = 0;
-            $temps[0].ajuster();
-            $("#son").attr("src", "sons/" + ($("#choixson").val()) + ".mid");
-            window.clearInterval($temps[0].interval);
+        var temps = document.getElementById("temps");
+        temps.ajuster();
+        if (temps.duree <= 0) {
+            temps.duree = 0;
+            temps.ajuster();
+			let choixson = document.getElementById("choixson").value;
+			let src = "sons/" + choixson + ".mid";
+            document.getElementById("son").setAttribute("src", src);
+            window.clearInterval(temps.interval);
         }
+		return temps;
     }
 
     static ajusterTemps(duree) {
-        if (duree !== undefined) {
+        console.log(this);
+		if (duree !== undefined) {
             this.duree = duree;
             this.debut = new Date() * 1;
             this.fin = this.duree + this.debut;
@@ -160,32 +182,31 @@ class Chrono {
         var h = Math.floor(temps / 3600);
         h = "00" + h;
         h = h.substr(h.length - 2);
-        $('#heures').text(h);
+        document.getElementById('heures').textContent = h;
 
         temps %= 3600;
         var m = Math.floor(temps / 60);
         m = "00" + m;
         m = m.substr(m.length - 2);
-        $('#minutes').text(m);
+        document.getElementById('minutes').textContent = m;
 
         temps %= 60;
         var s = temps;
         s = "00" + s;
         s = s.substr(s.length - 2);
-        $('#secondes').text(s);
+        document.getElementById('secondes').textContent = s;
     }
 
     static prendreDuree() {
-        var sec = $("#selectheures").val() * 3600;
-        sec += $("#selectminutes").val() * 60;
-        sec += $("#selectsecondes").val() * 1;
+        var sec = document.getElementById("selectheures").value * 3600;
+        sec += document.getElementById("selectminutes").value * 60;
+        sec += document.getElementById("selectsecondes").value * 1;
         return sec * 1000;
     }
     static load() {
-        $('body')
-            .append(this.creerFormulaire())
-            .append(this.creerTemps())
-            .append(this.creerSon());
+        document.body.appendChild(this.dom_formulaire());
+		document.body.appendChild(this.dom_temps());
+		document.body.appendChild(this.dom_son());
         this.appliquerTemps();
     }
 
@@ -193,45 +214,46 @@ class Chrono {
         this.evt = {
             demarrer: {
                 click: function() {
-                    var $pause = $("#btPause");
-                    var $temps = $("#temps");
+                    var btPause = document.getElementById("btPause");
+                    var temps = document.getElementById("temps");
                     if (this.value === "Démarrer") {
                         var sec = Chrono.prendreDuree();
                         if (sec) {
                             this.value = "Arrêter";
-                            $pause.removeAttr('disabled');
-                            $temps[0].ajuster(sec);
-                            $temps[0].interval = window.setInterval(Chrono.intTemps, 100);
-                            $("#son").attr("src", "");
-                            $("#duree .selectduree").attr("disabled", "disabled");
+                            btPause.removeAttribute('disabled');
+                            temps.ajuster(sec);
+                            temps.interval = window.setInterval(Chrono.intTemps, 100);
+                            document.getElementById("son").setAttribute("src", "");
+                            Chrono.duree.setAttribute("disabled", "disabled");
                         }
                     } else {
                         this.value = "Démarrer";
-                        window.clearInterval($temps[0].interval);
-                        $temps[0].duree = 0;
+                        window.clearInterval(temps.interval);
+                        temps.duree = 0;
                         Chrono.appliquerTemps();
                         // $temps[0].ajuster();
-                        $("#son").attr("src", "");
-                        $pause.val("Pause").attr("disabled", "disabled");
-                        $("#duree .selectduree").removeAttr("disabled");
+                        document.getElementById("son").setAttribute("src", "");
+                        btPause.value = "Pause";
+						btPause.setAttribute("disabled", "disabled");
+                        Chrono.duree.removeAttribute("disabled");
                     }
                 }
             },
             pause: {
                 click: function() {
-                    var $temps = $("#temps");
+                    var temps = document.getElementById("temps");
                     if (this.value === "Pause") {
                         this.value = "Redémarrer";
-                        window.clearInterval($temps[0].interval);
+                        window.clearInterval(temps.interval);
                     } else {
                         this.value = "Pause";
-                        $temps[0].ajuster($temps.duree);
-                        $temps[0].interval = window.setInterval(Chrono.intTemps, 400);
+                        temps.ajuster(temps.duree);
+                        temps.interval = window.setInterval(Chrono.intTemps, 400);
                     }
                 }
             }
         };
-        $().ready(function () {
+        window.addEventListener("load", function () {
             Chrono.load();
         });
     }
