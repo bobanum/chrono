@@ -2,6 +2,14 @@
 /*exported Chrono*/
 /*globals*/
 class Chrono {
+    static dom_chrono() {
+		var resultat = document.createElement("div");
+		resultat.classList.add("chrono");
+        resultat.appendChild(this.dom_formulaire());
+		resultat.appendChild(this.dom_temps());
+//		resultat.appendChild(this.dom_son());
+        return resultat;
+	}
     static dom_temps() {
         var resultat, span;
 		resultat = document.createElement("div");
@@ -25,6 +33,14 @@ class Chrono {
         resultat.ajuster = this.ajusterTemps;
 		this.temps = resultat;
 		resultat.obj = this;
+        return resultat;
+    }
+
+    static dom_separateur() {
+        var resultat;
+        resultat = document.createElement("span");
+		resultat.classList.add("separateur");
+		resultat.innerHTML = ":";
         return resultat;
     }
 
@@ -242,9 +258,7 @@ class Chrono {
         return sec * 1000;
     }
     static load() {
-        document.body.appendChild(this.dom_formulaire());
-		document.body.appendChild(this.dom_temps());
-		document.body.appendChild(this.dom_son());
+        document.body.appendChild(this.dom_chrono());
         this.appliquerTemps();
     }
 
