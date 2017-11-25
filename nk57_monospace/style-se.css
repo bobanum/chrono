@@ -1,0 +1,72 @@
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-lt.ttf');
+	font-weight: 200;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-lt-it.ttf');
+	font-weight: 200;
+	font-style: italic;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-bk.ttf');
+	font-weight: 300;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-bk-it.ttf');
+	font-weight: 300;
+	font-style: italic;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-rg.ttf');
+	font-weight: 400;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-rg-it.ttf');
+	font-weight: 400;
+	font-style: italic;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-bk.ttf');
+	font-weight: 500;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-bk-it.ttf');
+	font-weight: 500;
+	font-style: italic;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-bd.ttf');
+	font-weight: 700;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-bd-it.ttf');
+	font-weight: 700;
+	font-style: italic;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-eb.ttf');
+	font-weight: 800;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'nk57_monospace-se';
+	src: url('nk57-monospace-se-eb-it.ttf');
+	font-weight: 800;
+	font-style: italic;
+}

@@ -51,7 +51,7 @@ class Chrono {
 		resultat.setAttribute("name", "duree");
 		resultat.appendChild(this.dom_duree());
 		resultat.appendChild(this.dom_boutons());
-		resultat.appendChild(this.dom_selectSon());
+//		resultat.appendChild(this.dom_selectSon());
 		this.form = resultat;
 		resultat.obj = this;
         return resultat;
@@ -60,6 +60,7 @@ class Chrono {
     static dom_boutons() {
         var resultat;
 		resultat = document.createElement("fieldset");
+		resultat.classList.add("boutons")
 		resultat.appendChild(this.dom_btDemarrer());
 		resultat.appendChild(this.dom_btArreter());
 		resultat.appendChild(this.dom_btPause());
@@ -70,10 +71,13 @@ class Chrono {
     static dom_duree() {
         var resultat, span;
 		resultat = document.createElement("fieldset");
+		resultat.classList.add("duree");
 		span = resultat.appendChild(document.createElement("span"));
 		span.textContent = "Durée : ";
 		resultat.appendChild(this.creerSelect("selectheures", 0, 5));
+		resultat.appendChild(this.dom_separateur());
 		resultat.appendChild(this.creerSelect("selectminutes", 0, 60, 3));
+		resultat.appendChild(this.dom_separateur());
 		resultat.appendChild(this.creerSelect("selectsecondes", 0, 60, 0));
 		this.duree = resultat;
 		resultat.obj = this;
@@ -207,15 +211,14 @@ class Chrono {
             temps.duree = 0;
             temps.ajuster();
 			let choixson = document.getElementById("choixson").value;
-			let src = "sons/" + choixson + ".mid";
-            document.getElementById("son").setAttribute("src", src);
+//			let src = "sons/" + choixson + ".mid";
+//            document.getElementById("son").setAttribute("src", src);
             window.clearInterval(temps.interval);
         }
 		return temps;
     }
 
     static ajusterTemps(duree) {
-        console.log(this);
 		if (duree !== undefined) {
             this.duree = duree;
             this.debut = new Date() * 1;
@@ -233,23 +236,28 @@ class Chrono {
         if (isNaN(temps)) {
             temps = this.prendreDuree() / 1000;
         }
-        var h = Math.floor(temps / 3600);
-        h = "00" + h;
-        h = h.substr(h.length - 2);
-        document.getElementById('heures').textContent = h;
+		var t;
+        t = this.formatInt(temps, 3600);
+        document.getElementById('heures').textContent = t;
 
-        temps %= 3600;
-        var m = Math.floor(temps / 60);
-        m = "00" + m;
-        m = m.substr(m.length - 2);
-        document.getElementById('minutes').textContent = m;
+        t = this.formatInt(temps, 60, 60);
+        document.getElementById('minutes').textContent = t;
 
-        temps %= 60;
-        var s = temps;
-        s = "00" + s;
-        s = s.substr(s.length - 2);
-        document.getElementById('secondes').textContent = s;
+        t = this.formatInt(temps, 1, 60);
+        document.getElementById('secondes').textContent = t;
     }
+
+	static formatInt(int, div, mod) {
+		var resultat;
+		div = div || 1;
+		resultat = Math.floor(int / div);
+		if (mod) {
+			resultat = resultat % mod;
+		}
+        resultat = "00" + resultat;
+        resultat = resultat.slice(-2);
+		return resultat;
+	}
 
     static prendreDuree() {
         var sec = document.getElementById("selectheures").value * 3600;
@@ -274,7 +282,7 @@ class Chrono {
 					if (sec) {
 						temps.ajuster(sec);
 						temps.interval = window.setInterval(this.obj.intTemps, 100);
-						document.getElementById("son").setAttribute("src", "");
+//						document.getElementById("son").setAttribute("src", "");
 						this.setAttribute("disabled", "disabled");
 						this.obj.btPause.removeAttribute('disabled');
 						this.obj.btArreter.removeAttribute('disabled');
@@ -289,7 +297,7 @@ class Chrono {
 					temps.duree = 0;
 					this.obj.appliquerTemps();
 					// $temps[0].ajuster();
-					document.getElementById("son").setAttribute("src", "");
+//					document.getElementById("son").setAttribute("src", "");
 					this.setAttribute("disabled", "disabled");
 					this.obj.btPause.setAttribute("disabled", "disabled");
 					this.obj.btRedemarrer.setAttribute("disabled", "disabled");
