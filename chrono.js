@@ -29,12 +29,10 @@ class Chrono {
 		span.setAttribute("id", "secondes");
 		span.classList.add("temps");
 		span.innerHTML = "00";
-        resultat.ajuster = this.ajusterTemps;
 		this.temps = resultat;
 		resultat.obj = this;
         return resultat;
     }
-
     static dom_separateur() {
         var resultat;
         resultat = document.createElement("span");
@@ -42,7 +40,6 @@ class Chrono {
 		resultat.innerHTML = ":";
         return resultat;
     }
-
     static dom_formulaire() {
         var resultat;
 		resultat = document.createElement("form");
@@ -54,7 +51,6 @@ class Chrono {
 		resultat.obj = this;
         return resultat;
     }
-
     static dom_boutons() {
         var resultat;
 		resultat = document.createElement("fieldset");
@@ -65,7 +61,6 @@ class Chrono {
 		resultat.appendChild(this.dom_btRedemarrer());
         return resultat;
     }
-
     static dom_duree() {
         var resultat, span;
 		resultat = document.createElement("fieldset");
@@ -77,11 +72,10 @@ class Chrono {
 		resultat.appendChild(this.creerSelect("selectminutes", 0, 60, 3));
 		resultat.appendChild(this.dom_separateur());
 		resultat.appendChild(this.creerSelect("selectsecondes", 0, 60, 0));
-		this.duree = resultat;
+		this.form_duree = resultat;
 		resultat.obj = this;
         return resultat;
     }
-
     static creerSelect(nom, debut, fin, value) {
         var resultat;
 		value = value || 0;
@@ -99,7 +93,6 @@ class Chrono {
 		resultat.addEventListener("change", ()=>this.appliquerTemps());
         return resultat;
     }
-
     static dom_btDemarrer() {
         var resultat;
 		resultat = document.createElement("input");
@@ -125,7 +118,6 @@ class Chrono {
 		resultat.obj = this;
 		return resultat;
     }
-
     static dom_btPause() {
         var resultat;
         resultat = document.createElement("input");
@@ -152,53 +144,64 @@ class Chrono {
 		resultat.obj = this;
 		return resultat;
     }
-
-    static intTemps() {
-        var temps = this.temps;
-        temps.ajuster();
-        if (temps.duree <= 0) {
-            temps.duree = 0;
-            temps.ajuster();
-            window.clearInterval(temps.interval);
+    static intervalTemps() {
+		var now = new Date().getTime();
+		var tick = this.fin - now;
+		var sec = Math.round(tick / 1000);
+        if (sec > 0) {
+			this.ajusterTemps(tick);
+			this.interval = window.setTimeout(()=>this.intervalTemps(), this.prochainTick(now));
         }
-		return temps;
+		return this;
+    }
+    static prochainTick(now, redemarrer) {
+		var tick = this.fin - now;
+		var sec = tick / 1000;
+		if (redemarrer) {
+			sec = Math.ceil(sec);
+		} else {
+			sec = Math.round(sec);
+		}
+		var then = this.fin - (sec-1) * 1000;
+		return then - now;
     }
 	static demarrer() {
-		var temps = this.temps;
-		var sec = Chrono.prendreDuree();
-		if (sec) {
-			temps.ajuster(sec);
-			temps.interval = window.setInterval(this.intTemps, 100);
+		var duree = this.prendreDuree();
+		if (duree) {
+			this.debut = new Date().getTime();
+			this.duree = duree;
+			this.fin = this.debut + duree;
+//			this.ajusterTemps(duree);
+//			this.appliquerTemps();
+			this.interval = window.setTimeout(()=>this.intervalTemps(), 1000);
 			this.btDemarrer.setAttribute("disabled", "disabled");
 			this.btPause.removeAttribute("disabled");
 			this.btArreter.removeAttribute("disabled");
-			this.duree.setAttribute("disabled", "disabled");
+			this.form_duree.setAttribute("disabled", "disabled");
 		}
 		return this;
 	}
 	static arreter() {
-		var temps = this.temps;
-		window.clearInterval(temps.interval);
-		temps.duree = 0;
+		window.clearTimeout(this.interval);
+		this.duree = 0;
 		this.appliquerTemps();
 		this.btArreter.setAttribute("disabled", "disabled");
 		this.btPause.setAttribute("disabled", "disabled");
 		this.btRedemarrer.setAttribute("disabled", "disabled");
 		this.btDemarrer.removeAttribute("disabled");
-		this.duree.removeAttribute("disabled");
+		this.form_duree.removeAttribute("disabled");
 	}
 	static pause() {
-		var temps = this.temps;
+		this.duree = this.fin - new Date().getTime();
 		this.btPause.setAttribute("disabled", "disabled");
 		this.btRedemarrer.removeAttribute("disabled");
-		window.clearInterval(temps.interval);
+		window.clearTimeout(this.interval);
 	}
 	static redemarrer() {
-		var temps = this.temps;
 		this.btPause.removeAttribute("disabled");
 		this.btRedemarrer.setAttribute("disabled", "disabled");
-		temps.ajuster(temps.duree);
-		temps.interval = window.setInterval(this.intTemps, 400);
+		this.ajusterTemps(this.duree);
+		this.interval = window.setTimeout(()=>this.intervalTemps(), this.prochainTick(new Date().getTime(), true));
 	}
     static ajusterTemps(duree) {
 		if (duree !== undefined) {
@@ -210,10 +213,9 @@ class Chrono {
         } else {
             this.duree = 0;
         }
-        duree = Math.floor(this.duree / 1000);
-        Chrono.appliquerTemps(duree);
+        duree = Math.round(this.duree / 1000);
+        this.appliquerTemps(duree);
     }
-
     static appliquerTemps(temps) {
         if (isNaN(temps)) {
 			temps = this.prendreDuree() / 1000;
@@ -228,7 +230,6 @@ class Chrono {
         t = this.formatInt(temps, 1, 60);
         document.getElementById('secondes').textContent = t;
     }
-
 	static formatInt(int, div, mod) {
 		var resultat;
 		div = div || 1;
@@ -240,7 +241,6 @@ class Chrono {
         resultat = resultat.slice(-2);
 		return resultat;
 	}
-
     static prendreDuree() {
         var sec = document.getElementById("selectheures").value * 3600;
         sec += document.getElementById("selectminutes").value * 60;
@@ -251,7 +251,6 @@ class Chrono {
         document.body.appendChild(this.dom_chrono());
         this.appliquerTemps();
     }
-
     static init() {
 		this.evt = {
             btDemarrer: {
