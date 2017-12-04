@@ -7,7 +7,6 @@ class Chrono {
 		resultat.classList.add("chrono");
         resultat.appendChild(this.dom_formulaire());
 		resultat.appendChild(this.dom_temps());
-//		resultat.appendChild(this.dom_son());
         return resultat;
 	}
     static dom_temps() {
@@ -51,7 +50,6 @@ class Chrono {
 		resultat.setAttribute("name", "duree");
 		resultat.appendChild(this.dom_duree());
 		resultat.appendChild(this.dom_boutons());
-//		resultat.appendChild(this.dom_selectSon());
 		this.form = resultat;
 		resultat.obj = this;
         return resultat;
@@ -60,7 +58,7 @@ class Chrono {
     static dom_boutons() {
         var resultat;
 		resultat = document.createElement("fieldset");
-		resultat.classList.add("boutons")
+		resultat.classList.add("boutons");
 		resultat.appendChild(this.dom_btDemarrer());
 		resultat.appendChild(this.dom_btArreter());
 		resultat.appendChild(this.dom_btPause());
@@ -98,7 +96,7 @@ class Chrono {
 			option.textContent = (("00" + i).substr(("00" + i).length - 2));
         }
         resultat.value = value;
-		resultat.addEventListener("change", this.appliquerTemps);
+		resultat.addEventListener("change", ()=>this.appliquerTemps());
         return resultat;
     }
 
@@ -155,69 +153,53 @@ class Chrono {
 		return resultat;
     }
 
-    static dom_selectSon() {
-        var resultat, select;
-        resultat = document.createElement("fieldset");
-		select = resultat.appendChild(document.createElement("select"));
-		select.setAttribute("id", "choixson");
-		select.setAttribute("name", "choixson");
-        for (let i = 0, n = this.sons.length; i < n; i += 1) {
-			let nomson = this.sons[i].replace(" ", "").toLowerCase();
-			let option = select.appendChild(document.createElement("option"));
-			option.setAttribute("value", nomson);
-			option.textContent = this.sons[i];
-        }
-        select.value = this.sonDefaut;
-        return resultat;
-    }
-
-    static dom_son() {
-        /*var obj = document.createElement("object");
-        obj.classid = "CLSID:05589FA1-C356-11CE-BF01-00AA0055595A";
-        obj.height = "0";
-        obj.id="son";
-        obj.width="0";
-        var param = obj.appendChild(document.createElement("param"));
-        param.name = "Appearance";
-        param.value = "0";
-        var param = obj.appendChild(document.createElement("param"));
-        param.name = "AutoStart";
-        param.value = "1";
-        var param = obj.appendChild(document.createElement("param"));
-        param.name = "Filename";
-        param.value = "heyhey.mid";
-        var param = obj.appendChild(document.createElement("param"));
-        param.name = "Volume";
-        param.value = "7";
-        return obj;*/
-		var resultat;
-        resultat = document.createElement("embed");
-		resultat.setAttribute("id", "son");
-		resultat.setAttribute("type", "audio/midi");
-		resultat.setAttribute("width", 0);
-		resultat.setAttribute("height", 0);
-		resultat.setAttribute("src", "");
-		resultat.setAttribute("controller", false);
-		resultat.setAttribute("hidden", true);
-		resultat.setAttribute("autoplay", true);
-		resultat.setAttribute("volume", 100);
-        return resultat;
-    }
-
     static intTemps() {
-        var temps = document.getElementById("temps");
+        var temps = this.temps;
         temps.ajuster();
         if (temps.duree <= 0) {
             temps.duree = 0;
             temps.ajuster();
-			let choixson = document.getElementById("choixson").value;
-//			let src = "sons/" + choixson + ".mid";
-//            document.getElementById("son").setAttribute("src", src);
             window.clearInterval(temps.interval);
         }
 		return temps;
     }
-
+	static demarrer() {
+		var temps = this.temps;
+		var sec = Chrono.prendreDuree();
+		if (sec) {
+			temps.ajuster(sec);
+			temps.interval = window.setInterval(this.intTemps, 100);
+			this.btDemarrer.setAttribute("disabled", "disabled");
+			this.btPause.removeAttribute("disabled");
+			this.btArreter.removeAttribute("disabled");
+			this.duree.setAttribute("disabled", "disabled");
+		}
+		return this;
+	}
+	static arreter() {
+		var temps = this.temps;
+		window.clearInterval(temps.interval);
+		temps.duree = 0;
+		this.appliquerTemps();
+		this.btArreter.setAttribute("disabled", "disabled");
+		this.btPause.setAttribute("disabled", "disabled");
+		this.btRedemarrer.setAttribute("disabled", "disabled");
+		this.btDemarrer.removeAttribute("disabled");
+		this.duree.removeAttribute("disabled");
+	}
+	static pause() {
+		var temps = this.temps;
+		this.btPause.setAttribute("disabled", "disabled");
+		this.btRedemarrer.removeAttribute("disabled");
+		window.clearInterval(temps.interval);
+	}
+	static redemarrer() {
+		var temps = this.temps;
+		this.btPause.removeAttribute("disabled");
+		this.btRedemarrer.setAttribute("disabled", "disabled");
+		temps.ajuster(temps.duree);
+		temps.interval = window.setInterval(this.intTemps, 400);
+	}
     static ajusterTemps(duree) {
 		if (duree !== undefined) {
             this.duree = duree;
@@ -234,7 +216,7 @@ class Chrono {
 
     static appliquerTemps(temps) {
         if (isNaN(temps)) {
-            temps = this.prendreDuree() / 1000;
+			temps = this.prendreDuree() / 1000;
         }
 		var t;
         t = this.formatInt(temps, 3600);
@@ -271,55 +253,25 @@ class Chrono {
     }
 
     static init() {
-		this.sons = ["Heyhey", "Tubular Bell", "Sabre Dance", "Holiday", "Borderline", "Lucky Star", "Tarkus", "James Bond"];
-		this.sons.sort();
-		this.sonDefaut = "tubularbell";
 		this.evt = {
             btDemarrer: {
                 click: function() {
-                    var temps = document.getElementById("temps");
-					var sec = Chrono.prendreDuree();
-					if (sec) {
-						temps.ajuster(sec);
-						temps.interval = window.setInterval(this.obj.intTemps, 100);
-//						document.getElementById("son").setAttribute("src", "");
-						this.setAttribute("disabled", "disabled");
-						this.obj.btPause.removeAttribute('disabled');
-						this.obj.btArreter.removeAttribute('disabled');
-						this.obj.duree.setAttribute("disabled", "disabled");
-					}
+					this.obj.demarrer();
                 }
             },
             btArreter: {
                 click: function() {
-                    var temps = document.getElementById("temps");
-					window.clearInterval(temps.interval);
-					temps.duree = 0;
-					this.obj.appliquerTemps();
-					// $temps[0].ajuster();
-//					document.getElementById("son").setAttribute("src", "");
-					this.setAttribute("disabled", "disabled");
-					this.obj.btPause.setAttribute("disabled", "disabled");
-					this.obj.btRedemarrer.setAttribute("disabled", "disabled");
-					this.obj.btDemarrer.removeAttribute("disabled");
-					this.obj.duree.removeAttribute("disabled");
+					this.obj.arreter();
                 }
             },
             btPause: {
                 click: function() {
-                    var temps = document.getElementById("temps");
-					this.setAttribute("disabled", "disabled");
-					this.obj.btRedemarrer.removeAttribute("disabled");
-					window.clearInterval(temps.interval);
+					this.obj.pause();
                 }
             },
             btRedemarrer: {
                 click: function() {
-                    var temps = document.getElementById("temps");
-					this.obj.btPause.removeAttribute("disabled");
-					this.setAttribute("disabled", "disabled");
-					temps.ajuster(temps.duree);
-					temps.interval = window.setInterval(this.obj.intTemps, 400);
+					this.obj.redemarrer();
                 }
             }
         };
