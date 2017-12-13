@@ -13,22 +13,11 @@ class Chrono {
         var resultat, span;
 		resultat = document.createElement("div");
         resultat.setAttribute("id", "temps");
-		span = resultat.appendChild(document.createElement("span"));
-        span.setAttribute("id", "heures");
-        span.classList.add("temps");
-        span.innerHTML = "00";
-        span = resultat.appendChild(document.createElement("span"));
-		span.innerHTML = ":";
-        span = resultat.appendChild(document.createElement("span"));
-		span.setAttribute("id", "minutes");
-		span.classList.add("temps");
-		span.innerHTML = "00";
-        span = resultat.appendChild(document.createElement("span"));
-		span.innerHTML = ":";
-        span = resultat.appendChild(document.createElement("span"));
-		span.setAttribute("id", "secondes");
-		span.classList.add("temps");
-		span.innerHTML = "00";
+		span = resultat.appendChild(this.dom_nombre("heures"));
+        span = resultat.appendChild(this.dom_separateur());
+		span = resultat.appendChild(this.dom_nombre("minutes"));
+        span = resultat.appendChild(this.dom_separateur());
+		span = resultat.appendChild(this.dom_nombre("secondes"));
 		this.temps = resultat;
 		resultat.obj = this;
         return resultat;
@@ -51,6 +40,22 @@ class Chrono {
 		resultat.obj = this;
         return resultat;
     }
+	static dom_nombre(id, n) {
+		var resultat, span;
+		n = n || 0;
+		resultat = document.createElement("span");
+		resultat.classList.add("temps");
+		if (id) {
+			resultat.setAttribute("id", id);
+		}
+		span = resultat.appendChild(document.createElement("span"));
+		span.classList.add("dizaines");
+		span.innerHTML = Math.floor(n / 10);
+		span = resultat.appendChild(document.createElement("span"));
+		span.classList.add("unites");
+		span.innerHTML = n % 10;
+		return resultat;
+	}
     static dom_boutons() {
         var resultat;
 		resultat = document.createElement("fieldset");
