@@ -98,55 +98,43 @@ class Chrono {
 		resultat.addEventListener("change", ()=>this.appliquerTemps());
         return resultat;
     }
+    static dom_bt(id, label, click, accesskey) {
+        var resultat;
+		if (!click) {
+			click = this.evt[id].click;
+		}
+		resultat = document.createElement("input");
+		resultat.setAttribute("id", id);
+		resultat.setAttribute("type", "button");
+		resultat.setAttribute("value", label);
+		if (accesskey) {
+			resultat.setAttribute("accesskey", accesskey);
+		}
+		resultat.addEventListener("click", click);
+		this[id] = resultat;
+		resultat.obj = this;
+		return resultat;
+    }
     static dom_btDemarrer() {
         var resultat;
-		resultat = document.createElement("input");
-		resultat.setAttribute("id", "btDemarrer");
-		resultat.setAttribute("type", "button");
-		resultat.setAttribute("value", "Démarrer");
-		resultat.setAttribute("accesskey", "D");
-		resultat.addEventListener("click", this.evt.btDemarrer.click);
-		this.btDemarrer = resultat;
-		resultat.obj = this;
+		resultat = this.dom_bt("btDemarrer", "Démarrer", null, "D");
 		return resultat;
     }
     static dom_btArreter() {
         var resultat;
-		resultat = document.createElement("input");
-		resultat.setAttribute("id", "btArreter");
-		resultat.setAttribute("type", "button");
-		resultat.setAttribute("value", "Arrêter");
-		resultat.setAttribute("accesskey", "A");
-		resultat.setAttribute("disabled", "disabled");
-		resultat.addEventListener("click", this.evt.btArreter.click);
-		this.btArreter = resultat;
-		resultat.obj = this;
+		resultat = this.dom_bt("btArreter", "Arrêter", null, "A");
 		return resultat;
     }
     static dom_btPause() {
         var resultat;
-        resultat = document.createElement("input");
-		resultat.setAttribute("id", "btPause");
-		resultat.setAttribute("type", "button");
-		resultat.setAttribute("value", "Pause");
+		resultat = this.dom_bt("btPause", "Pause", null, "P");
 		resultat.setAttribute("disabled", "disabled");
-		resultat.setAttribute("accesskey", "P");
-		resultat.addEventListener("click", this.evt.btPause.click);
-		this.btPause = resultat;
-		resultat.obj = this;
 		return resultat;
     }
     static dom_btRedemarrer() {
         var resultat;
-        resultat = document.createElement("input");
-		resultat.setAttribute("id", "btRedemarrer");
-		resultat.setAttribute("type", "button");
-		resultat.setAttribute("value", "Redémarrer");
+		resultat = this.dom_bt("btRedemarrer", "Redémarrer", null, "R");
 		resultat.setAttribute("disabled", "disabled");
-		resultat.setAttribute("accesskey", "R");
-		resultat.addEventListener("click", this.evt.btRedemarrer.click);
-		this.btRedemarrer = resultat;
-		resultat.obj = this;
 		return resultat;
     }
     static intervalTemps() {
