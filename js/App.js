@@ -1,121 +1,5 @@
 /*jslint esnext:true, browser:true*/
-/*exported App, Module*/
-class Module {
-	constructor() {
-		this._dom = null;
-	}
-	get dom() {
-		if (!this._dom) {
-			this._dom = this.dom_creer();
-		}
-		return this._dom;
-	}
-	static bind(element, evts) {
-		if (!evts) {
-			return this;
-		}
-		for (let k in evts) {
-			element.addEventListener(k, evts[k]);
-		}
-		return this;
-	}
-	static setAttributes(element, attributes) {
-		if (!attributes) {
-			return this;
-		}
-		for (let k in attributes) {
-			element.setAttribute(k, attributes[k]);
-		}
-		return this;
-	}
-	dom_interface() {
-		var resultat;
-		resultat = document.createElement("div");
-		resultat.classList.add("interface");
-		return resultat;
-	}
-	dom_bouton(id, value, evts, attributes) {
-		var resultat;
-
-		resultat = document.createElement("span");
-		resultat.setAttribute("id", id);
-		resultat.setAttribute("class", "button");
-		resultat.innerHTML = value;
-		Module.bind(resultat, evts);
-		Module.setAttributes(resultat, attributes);
-		return resultat;
-	}
-	dom_creer() {
-		var resultat;
-		resultat = document.createElement("section");
-		resultat.classList.add("module");
-		resultat.appendChild(this.dom_header());
-		resultat.appendChild(this.dom_footer());
-		resultat.appendChild(this.dom_body());
-		resultat.obj = this;
-		return resultat;
-	}
-	dom_header(contenu) {
-		this.header = document.createElement("header");
-		if (contenu) {
-			this.header.appendChild(contenu);
-		}
-		this.header.innerHTML = "dom_header";
-		return this.header;
-	}
-	dom_footer(contenu) {
-		this.footer = document.createElement("footer");
-		if (contenu) {
-			this.header.appendChild(contenu);
-		}
-		this.footer.innerHTML = "dom_footer";
-		return this.footer;
-	}
-	dom_body(contenu) {
-		this.body = document.createElement("div");
-		this.body.classList.add("body");
-		if (contenu) {
-			this.header.appendChild(contenu);
-		}
-		this.body.innerHTML = "dom_body";
-		return this.body;
-	}
-	dom_select(id, values, evts, selected, attributes) {
-		var resultat = document.createElement("select");
-		resultat.setAttribute("id", id);
-		resultat.setAttribute("name", id);
-		if (values instanceof Array) {
-			values.forEach(function (e) {
-				resultat.appendChild(this.dom_option(e, null, e === selected));
-			}, this);
-		} else {
-			for (let k in values) {
-				resultat.appendChild(this.dom_option(k, values[k], k === selected));
-			}
-		}
-		Module.bind(resultat, evts);
-		Module.setAttributes(resultat, attributes);
-		return resultat;
-	}
-	dom_option(value, label, selected) {
-		var resultat = document.createElement("option");
-		if (selected) {
-			resultat.setAttribute("selected", "selected");
-		}
-		if (value !== null) {
-			resultat.setAttribute("value", value);
-		}
-		resultat.innerHTML = label;
-		return resultat;
-	}
-	static init() {
-		this.evt = {
-
-		};
-	}
-}
-Module.init();
-
+/*exported App*/
 class App {
 	constructor() {
 	}
@@ -134,10 +18,28 @@ class App {
 			element.setAttribute("rel", "stylesheet");
 		}
 		element.setAttribute("id", id);
-		Module.setAttributes(element, attributes);
+		this.setAttributes(element, attributes);
 		this.dependencies[id] = element;
 		document.head.appendChild(element);
 		return this.dependencies[id];
+	}
+	static bind(element, evts) {
+		if (!evts) {
+			return this;
+		}
+		for (let k in evts) {
+			element.addEventListener(k, evts[k]);
+		}
+		return this;
+	}
+	static setAttributes(element, attributes) {
+		if (!attributes) {
+			return this;
+		}
+		for (let k in attributes) {
+			element.setAttribute(k, attributes[k]);
+		}
+		return this;
 	}
 	static setScriptPath() {
 		this.scriptURL = document.head.lastChild.getAttribute('src');
@@ -229,6 +131,7 @@ class App {
 		this.dependencies = {};
 		this.setScriptPath();
 		var data=this.parseUrl(this.scriptURL).data;
+		this.addDependency("Module.js");
 		for (let k in data) {
 			this.addDependency(k + ".js");
 		}

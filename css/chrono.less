@@ -1,11 +1,10 @@
-@import url(../images/liquid_crystal/style.css);
 @font-face {
 	font-family: icones;
 	src: url(../images/icones.ttf);
 }
 @font-face {
 	font-family: chiffres;
-	src: url(../images/nk57-monospace-cd-eb.ttf);
+	src: url(../images/nk57-monospace/nk57-monospace-cd-eb.ttf);
 	font-weight: bold;
 }
 html, body {
@@ -68,7 +67,6 @@ section.module {
 	}
 }
 #cadran {
-	font-family:liquid_crystal, monospace;
 	font-family:chiffres;
 	font-size:18vw;
 	font-weight:bold;
@@ -110,20 +108,16 @@ section.module {
 		}
 	}
 }
-span.button {
+input[type=button] {
 	font-family: icones;
-//	text-shadow: 0 1px white;
-//	display: inline-flex;
-//	align-items: center;
-//	justify-content: center;
-//	text-align: center;
-//	background-color: rgba(0,0,0,.2);
-//
-//	width: 2em;
+	text-shadow: 0 1px white;
+//	background-repeat: no-repeat;
+//	background-position: center center;
+//	background-size: 75%;
+//	color: transparent;
+//	width: 3em;
 //	line-height: 0;
-//	height: 2em;
-//	border-radius: 100%;
-//	box-shadow: .05em .05em .05em inset;
+//	height: 3em;
 //	margin: 0 .5em;
 }
 #btPlay {
