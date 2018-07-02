@@ -11,11 +11,10 @@ class App {
 		}
 		if (url.slice(-3) === ".js") {
 			element = document.createElement("script");
-			element.setAttribute("src", this._scriptPath + "/" + url);
+			element.setAttribute("src", this.jsUrl(url));
 		} else if (url.slice(-4) === ".css") {
 			element = document.createElement("link");
-			console.log(this._scriptPath);
-			element.setAttribute("href", this._scriptPath + "/" + url);
+			element.setAttribute("href", this.cssUrl(url));
 			element.setAttribute("rel", "stylesheet");
 		}
 		element.setAttribute("id", id);
@@ -23,9 +22,6 @@ class App {
 		this.dependencies[id] = element;
 		document.head.appendChild(element);
 		return this.dependencies[id];
-	}
-	static scriptUrl(file) {
-
 	}
 	static bind(element, evts) {
 		if (!evts) {
@@ -49,6 +45,12 @@ class App {
 		if (!path) {
 			return ".";
 		}
+		if (path === ".") {
+			return "..";
+		}
+		if (path === "..") {
+			return "/";
+		}
 		var resultat = path.split(/[\\\/]/g);
 		resultat.pop();
 		if (!resultat.length) {
@@ -57,17 +59,54 @@ class App {
 		resultat = resultat.join("/");
 		return resultat;
 	}
-	static setPaths() {
-		debugger;
-		this._pageUrl = this.dirname(location.href);
-		this._scriptURL = document.head.lastChild.getAttribute('src');
-		this._scriptPath = document.head.lastChild.getAttribute('src').split('/').slice(0,-1);
-		if (this._scriptPath.length === 0) {
-			this._scriptPath = ".";
+	static realpath(url) {
+		if (url.match(/^[a-zA-Z0-9]+:\/\//)) {
+			return url;
 		} else {
-			this._scriptPath = this._scriptPath.join("/");
+			return this.pageUrl(url);
 		}
+	}
+	static setPaths() {
+		this._pagePath = this.dirname(location.href);
+		this._scriptURL = document.head.lastChild.getAttribute('src');
+		this._appPath = this.dirname(this._scriptURL);
+		this._appPath = this.realpath(this._appPath);
+		this._appPath = this.dirname(this._appPath);	// Pour sortir du dossier "js"
 		return this;
+	}
+	static pageUrl(file) {
+		var resultat = this._pagePath;
+		if (file) {
+			resultat += "/" + file;
+		}
+		return resultat;
+	}
+	static appUrl(file) {
+		var resultat = this._appPath;
+		if (file) {
+			resultat += "/" + file;
+		}
+		return resultat;
+	}
+	static jsUrl(file) {
+		var resultat = this.appUrl("js");
+		if (file) {
+			if (!file.match(/\.js$/)) {
+				file += ".js";
+			}
+			resultat += "/" + file;
+		}
+		return resultat;
+	}
+	static cssUrl(file) {
+		var resultat = this.appUrl("css");
+		if (file) {
+			if (!file.match(/\.css$/)) {
+				file += ".css";
+			}
+			resultat += "/" + file;
+		}
+		return resultat;
 	}
 	/**
 	 * Retourne un objet contenant les informations et données d'une adresse
