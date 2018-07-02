@@ -1,0 +1,44 @@
+@font-face {
+	src:url("LiquidCrystal-Light.otf");
+	font-family:liquid_crystal;
+	font-weight:200;
+}
+@font-face {
+	src:url("LiquidCrystal-LightItalic.otf");
+	font-family:liquid_crystal;
+	font-weight:200;
+	font-style:italic;
+}
+@font-face {
+	src:url("LiquidCrystal-Normal.otf");
+	font-family:liquid_crystal;
+	font-weight:400;
+}
+@font-face {
+	src:url("LiquidCrystal-NormalItalic.otf");
+	font-family:liquid_crystal;
+	font-weight:400;
+	font-style:italic;
+}
+@font-face {
+	src:url("LiquidCrystal-Bold.otf");
+	font-family:liquid_crystal;
+	font-weight:700;
+}
+@font-face {
+	src:url("LiquidCrystal-BoldItalic.otf");
+	font-family:liquid_crystal;
+	font-weight:700;
+	font-style:italic;
+}
+@font-face {
+	src:url("LiquidCrystal-ExBold.otf");
+	font-family:liquid_crystal;
+	font-weight:900;
+}
+@font-face {
+	src:url("LiquidCrystal-ExBoldItalic.otf");
+	font-family:liquid_crystal;
+	font-weight:900;
+	font-style:italic;
+}

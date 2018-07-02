@@ -1,275 +1,286 @@
 /*jslint browser:true, esnext:true*/
-/*exported Chrono*/
-/*globals*/
-class Chrono {
-    static dom_chrono() {
-		var resultat = document.createElement("div");
-		resultat.classList.add("chrono");
-        resultat.appendChild(this.dom_formulaire());
-		resultat.appendChild(this.dom_temps());
-        return resultat;
+/*globals App, Module*/
+class Chrono extends Module {
+	static creerCadran(secondes) {
+		var temps, span;
+		secondes = secondes || 0;
+		temps = document.createElement("div");
+		temps.setAttribute("id", "cadran");
+		var s = secondes % 60;
+		secondes = (secondes - s) / 60;
+		var m = secondes % 60;
+		secondes = (secondes - m) / 60;
+		var h = secondes;
+		span = temps.appendChild(this.temps("heures", h));
+		span = temps.appendChild(this.separateur());
+		span = temps.appendChild(this.temps("minutes", m));
+		span = temps.appendChild(this.separateur());
+		span = temps.appendChild(this.temps("secondes", s));
+		return temps;
 	}
-    static dom_temps() {
-        var resultat, span;
-		resultat = document.createElement("div");
-        resultat.setAttribute("id", "temps");
-		span = resultat.appendChild(this.dom_nombre("heures"));
-        span = resultat.appendChild(this.dom_separateur());
-		span = resultat.appendChild(this.dom_nombre("minutes"));
-        span = resultat.appendChild(this.dom_separateur());
-		span = resultat.appendChild(this.dom_nombre("secondes"));
-		this.temps = resultat;
-		resultat.obj = this;
-        return resultat;
-    }
-    static dom_separateur() {
-        var resultat;
-        resultat = document.createElement("span");
-		resultat.classList.add("separateur");
-		resultat.innerHTML = ":";
-        return resultat;
-    }
-    static dom_formulaire() {
-        var resultat;
-		resultat = document.createElement("form");
-		resultat.setAttribute("id", "duree");
-		resultat.setAttribute("name", "duree");
-		resultat.appendChild(this.dom_duree());
-		resultat.appendChild(this.dom_boutons());
-		this.form = resultat;
-		resultat.obj = this;
-        return resultat;
-    }
-	static dom_nombre(id, n) {
+	static temps(id, val) {
 		var resultat, span;
-		n = n || 0;
+		val = val || 0;
 		resultat = document.createElement("span");
+		resultat.setAttribute("id", id);
 		resultat.classList.add("temps");
-		if (id) {
-			resultat.setAttribute("id", id);
-		}
 		span = resultat.appendChild(document.createElement("span"));
 		span.classList.add("dizaines");
-		span.innerHTML = Math.floor(n / 10);
+		span.innerHTML = Math.floor(val / 10);
 		span = resultat.appendChild(document.createElement("span"));
 		span.classList.add("unites");
-		span.innerHTML = n % 10;
+		span.innerHTML = val % 10;
 		return resultat;
 	}
-    static dom_boutons() {
-        var resultat;
-		resultat = document.createElement("fieldset");
-		resultat.classList.add("boutons");
-		resultat.appendChild(this.dom_btDemarrer());
-		resultat.appendChild(this.dom_btArreter());
-		resultat.appendChild(this.dom_btPause());
-		resultat.appendChild(this.dom_btRedemarrer());
-        return resultat;
-    }
-    static dom_duree() {
-        var resultat, span;
-		resultat = document.createElement("fieldset");
-		resultat.classList.add("duree");
-		span = resultat.appendChild(document.createElement("span"));
-		span.textContent = "Durée : ";
-		resultat.appendChild(this.creerSelect("selectheures", 0, 5));
-		resultat.appendChild(this.dom_separateur());
-		resultat.appendChild(this.creerSelect("selectminutes", 0, 60, 3));
-		resultat.appendChild(this.dom_separateur());
-		resultat.appendChild(this.creerSelect("selectsecondes", 0, 60, 0));
-		this.form_duree = resultat;
-		resultat.obj = this;
-        return resultat;
-    }
-    static creerSelect(nom, debut, fin, value) {
-        var resultat;
-		value = value || 0;
-        fin = fin || 60;
-        debut = debut || 0;
-        resultat = document.createElement("select");
-		resultat.setAttribute("id", nom);
-		resultat.setAttribute("name", nom);
-        for (let i = debut; i <= fin; i += 1) {
-            let option = resultat.appendChild(document.createElement("option"));
-			option.setAttribute("value", i);
-			option.textContent = (("00" + i).substr(("00" + i).length - 2));
-        }
-        resultat.value = value;
-		resultat.addEventListener("change", ()=>this.appliquerTemps());
-        return resultat;
-    }
-    static dom_bt(id, label, click, accesskey) {
-        var resultat;
-		if (!click) {
-			click = this.evt[id].click;
+	static separateur(car) {
+		car = car || "";
+		var resultat;
+		resultat = document.createElement("span");
+		resultat.classList.add("separateur");
+		if (car) {
+			resultat.innerHTML = car;
 		}
-		resultat = document.createElement("input");
-		resultat.setAttribute("id", id);
-		resultat.setAttribute("type", "button");
-		resultat.setAttribute("value", label);
-		if (accesskey) {
-			resultat.setAttribute("accesskey", accesskey);
+		return resultat;
+	}
+	static zzzcreerFormulaire() {
+		var form, span, select;
+		form = document.createElement("form");
+		form.setAttribute("id", "duree");
+		form.setAttribute("name", "duree");
+		form.style.textAlign = "center";
+		span = form.appendChild(document.createElement("span"));
+		span.innerHTML = "Durée : ";
+		select = form.appendChild(this.creerSelect("selectheures", 0, 5));
+		select.classList.add("selectduree");
+		select = form.appendChild(this.creerSelect("selectminutes", 0, 60, 3));
+		select.classList.add("selectduree");
+		select = form.appendChild(this.creerSelect("selectsecondes", 0, 60, 0));
+		select.classList.add("selectduree");
+		form.appendChild(this.dom_boutonPlay());
+		form.appendChild(this.dom_boutonPause());
+		form.appendChild(this.dom_boutonStop());
+		form.appendChild(this.creerSelectSon(Chrono.sons, "tubularbell"));
+		return form;
+	}
+	static zzzcreerSelect(nom, debut, fin, selected) {
+		selected = selected || 0;
+		fin = fin || 60;
+		debut = debut || 0;
+		var temp = fin;
+		var pad = "";
+		while (temp > 0) {
+			pad += "0";
+			temp = Math.floor(temp / 10);
 		}
-		resultat.addEventListener("click", click);
-		this[id] = resultat;
-		resultat.obj = this;
-		return resultat;
-    }
-    static dom_btDemarrer() {
-        var resultat;
-		resultat = this.dom_bt("btDemarrer", "Démarrer", null, "D");
-		return resultat;
-    }
-    static dom_btArreter() {
-        var resultat;
-		resultat = this.dom_bt("btArreter", "Arrêter", null, "A");
-		return resultat;
-    }
-    static dom_btPause() {
-        var resultat;
-		resultat = this.dom_bt("btPause", "Pause", null, "P");
-		resultat.setAttribute("disabled", "disabled");
-		return resultat;
-    }
-    static dom_btRedemarrer() {
-        var resultat;
-		resultat = this.dom_bt("btRedemarrer", "Redémarrer", null, "R");
-		resultat.setAttribute("disabled", "disabled");
-		return resultat;
-    }
-    static intervalTemps() {
-		var now = new Date().getTime();
-		var tick = this.fin - now;
-		var sec = Math.round(tick / 1000);
-        if (sec > 0) {
-			this.ajusterTemps(tick);
-			this.interval = window.setTimeout(()=>this.intervalTemps(), this.prochainTick(now));
-        }
-		return this;
-    }
-    static prochainTick(now, redemarrer) {
-		var tick = this.fin - now;
-		var sec = tick / 1000;
-		if (redemarrer) {
-			sec = Math.ceil(sec);
-		} else {
-			sec = Math.round(sec);
+		var values = {};
+		for (let i = debut; i <= fin; i += 1) {
+			values[i] = (pad + i).slice(-pad.length);
 		}
-		var then = this.fin - (sec-1) * 1000;
-		return then - now;
-    }
+		var resultat = this.dom_select(nom, values, selected);
+		return resultat;
+	}
+	static zzzdom_boutonPlay() {
+		var resultat;
+		resultat = this.dom_bouton("btPlay", "A", this.evt.demarrer, {"accesskey": "D"});
+		return resultat;
+	}
+	static zzzdom_boutonPause() {
+		var resultat;
+		resultat = this.dom_bouton("btPause", "D", this.evt.demarrer, {"disabled": "disabled", "accesskey": "P"});
+		return resultat;
+	}
+	static zzzdom_boutonStop() {
+		var resultat;
+		resultat = this.dom_bouton("btPlay", "C", this.evt.demarrer, {"disabled": "disabled", "accesskey": "S"});
+		return resultat;
+	}
+	static zzzcreerSelectSon(liste, defaut) {
+		var resultat;
+		defaut = defaut || "";
+		resultat = document.createElement("select");
+		resultat.setAttribute("id", "choixson");
+		resultat.setAttribute("name", "choixson");
+		for (let i = 0, n = liste.length; i < n; i += 1) {
+			let nomson = liste[i].replace(" ", "").toLowerCase();
+			let option = resultat.appendChild(document.createElement("option"));
+			option.setAttribute("value", nomson);
+			option.innerHTML = liste[i];
+		}
+		resultat.value = defaut;
+		return resultat;
+	}
 	static demarrer() {
-		var duree = this.prendreDuree();
-		if (duree) {
-			this.debut = new Date().getTime();
-			this.duree = duree;
-			this.fin = this.debut + duree;
-//			this.ajusterTemps(duree);
-//			this.appliquerTemps();
-			this.interval = window.setTimeout(()=>this.intervalTemps(), 1000);
-			this.btDemarrer.setAttribute("disabled", "disabled");
-			this.btPause.removeAttribute("disabled");
-			this.btArreter.removeAttribute("disabled");
-			this.form_duree.setAttribute("disabled", "disabled");
+		var cadran = document.getElementById("cadran");
+		var btDemarrer = document.getElementById('btDemarrer');
+		var btPause = document.getElementById('btPause');
+		var btStop = document.getElementById('btStop');
+		var son = document.getElementById('son');
+		var sec = this.prendreDuree();
+		if (sec) {
+			btPause.setAttribute('disabled', 'disabled');
+			btPause.removeAttribute('disabled');
+			btStop.removeAttribute('disabled');
+			this.ajusterTemps(cadran, sec);
+			cadran.interval = window.setInterval(this.intTemps, 100);
+			son.setAttribute("src", "");
+			document.querySelectorAll("#duree .selectduree").forEach(function (e) {
+				e.setAttribute("disabled", "disabled");
+			});
 		}
-		return this;
 	}
 	static arreter() {
-		window.clearTimeout(this.interval);
-		this.duree = 0;
-		this.appliquerTemps();
-		this.btArreter.setAttribute("disabled", "disabled");
-		this.btPause.setAttribute("disabled", "disabled");
-		this.btRedemarrer.setAttribute("disabled", "disabled");
-		this.btDemarrer.removeAttribute("disabled");
-		this.form_duree.removeAttribute("disabled");
+		var cadran = document.getElementById("cadran");
+		var btDemarrer = document.getElementById('btDemarrer');
+		var btPause = document.getElementById('btPause');
+		var btStop = document.getElementById('btStop');
+		var son = document.getElementById('son');
+		btDemarrer.value = "Démarrer";
+		window.clearInterval(cadran.interval);
+		cadran.duree = 0;
+		this.appliquerTemps(cadran);
+		son.setAttribute("src", "");
+		btPause.value = "Pause";
+		btPause.setAttribute("disabled", "disabled");
+		btStop.setAttribute("disabled", "disabled");
+		document.querySelectorAll("#duree .selectduree").forEach(function (e) {
+			e.removeAttribute("disabled");
+		});
 	}
-	static pause() {
-		this.duree = this.fin - new Date().getTime();
-		this.btPause.setAttribute("disabled", "disabled");
-		this.btRedemarrer.removeAttribute("disabled");
-		window.clearTimeout(this.interval);
+	static creerSon() {
+		/*var obj = document.createElement("object");
+		obj.classid = "CLSID:05589FA1-C356-11CE-BF01-00AA0055595A";
+		obj.height = "0";
+		obj.id="son";
+		obj.width="0";
+		var param = obj.appendChild(document.createElement("param"));
+		param.name = "Appearance";
+		param.value = "0";
+		var param = obj.appendChild(document.createElement("param"));
+		param.name = "AutoStart";
+		param.value = "1";
+		var param = obj.appendChild(document.createElement("param"));
+		param.name = "Filename";
+		param.value = "heyhey.mid";
+		var param = obj.appendChild(document.createElement("param"));
+		param.name = "Volume";
+		param.value = "7";
+		return obj;*/
+		var obj = document.createElement("embed");
+		obj.setAttribute("id", "son");
+		obj.setAttribute("type", "audio/midi");
+		obj.setAttribute("width", 0);
+		obj.setAttribute("height", 0);
+		obj.setAttribute("src", "");
+		obj.setAttribute("controller", false);
+		obj.setAttribute("hidden", true);
+		obj.setAttribute("autoplay", true);
+		obj.setAttribute("volume", 100);
+		return obj;
 	}
-	static redemarrer() {
-		this.btPause.removeAttribute("disabled");
-		this.btRedemarrer.setAttribute("disabled", "disabled");
-		this.ajusterTemps(this.duree);
-		this.interval = window.setTimeout(()=>this.intervalTemps(), this.prochainTick(new Date().getTime(), true));
-	}
-    static ajusterTemps(duree) {
-		if (duree !== undefined) {
-            this.duree = duree;
-            this.debut = new Date() * 1;
-            this.fin = this.duree + this.debut;
-        } else if (this.duree > 0) {
-            this.duree = this.fin - (new Date() * 1);
-        } else {
-            this.duree = 0;
-        }
-        duree = Math.round(this.duree / 1000);
-        this.appliquerTemps(duree);
-    }
-    static appliquerTemps(temps) {
-        if (isNaN(temps)) {
-			temps = this.prendreDuree() / 1000;
-        }
-		var t;
-        t = this.formatInt(temps, 3600);
-        document.getElementById('heures').textContent = t;
-
-        t = this.formatInt(temps, 60, 60);
-        document.getElementById('minutes').textContent = t;
-
-        t = this.formatInt(temps, 1, 60);
-        document.getElementById('secondes').textContent = t;
-    }
-	static formatInt(int, div, mod) {
-		var resultat;
-		div = div || 1;
-		resultat = Math.floor(int / div);
-		if (mod) {
-			resultat = resultat % mod;
+	static intTemps() {
+		var cadran = document.getElementById("cadran");
+		var son = document.getElementById("son");
+		var choixson = document.getElementById("choixson").value;
+		this.ajusterTemps(cadran);
+		if (cadran.duree <= 0) {
+			cadran.duree = 0;
+			this.ajusterTemps(cadran);
+			son.setAttribute("src", "sons/" + choixson.val + ".mid");
+			window.clearInterval(cadran.interval);
 		}
-        resultat = "00" + resultat;
-        resultat = resultat.slice(-2);
-		return resultat;
 	}
-    static prendreDuree() {
-        var sec = document.getElementById("selectheures").value * 3600;
-        sec += document.getElementById("selectminutes").value * 60;
-        sec += document.getElementById("selectsecondes").value * 1;
-        return sec * 1000;
-    }
-    static load() {
-        document.body.appendChild(this.dom_chrono());
-        this.appliquerTemps();
-    }
-    static init() {
+	static ajusterTemps(cadran, duree) {
+		if (duree !== undefined) {
+			cadran.duree = duree;
+			cadran.debut = new Date() * 1;
+			cadran.fin = cadran.duree + cadran.debut;
+		} else if (cadran.duree > 0) {
+			cadran.duree = cadran.fin - (new Date() * 1);
+		} else {
+			cadran.duree = 0;
+		}
+		duree = Math.floor(cadran.duree / 1000);
+		this.appliquerTemps(cadran, duree);
+	}
+	static appliquerTemps(cadran, temps) {
+		if (isNaN(temps)) {
+			temps = this.prendreDuree() / 1000;
+		}
+		debugger;
+		console.log(cadran, temps);
+		cadran.parentNode.replaceChild(this.creerCadran(temps), cadran);
+//		var h = Math.floor(temps / 3600);
+//		h = "00" + h;
+//		h = h.substr(h.length - 2);
+//		document.getElementById('heures').innerHTML = h;
+//
+//		temps %= 3600;
+//		var m = Math.floor(temps / 60);
+//		m = "00" + m;
+//		m = m.substr(m.length - 2);
+//		document.getElementById('minutes').innerHTML = m;
+//
+//		temps %= 60;
+//		var s = temps;
+//		s = "00" + s;
+//		s = s.substr(s.length - 2);
+//		document.getElementById('secondes').innerHTML = s;
+	}
+	static prendreDuree() {
+		var sec = document.getElementById("selectheures").value * 3600;
+		sec += document.getElementById("selectminutes").value * 60;
+		sec += document.getElementById("selectsecondes").value * 1;
+		return sec * 1000;
+	}
+	static init() {
+		var self = this;
+		this.sons = [
+			"Heyhey",
+			"Tubular Bell",
+			"Sabre Dance",
+			"Holiday",
+			"Borderline",
+			"Lucky Star",
+			"Tarkus",
+			"James Bond"
+		];
+
 		this.evt = {
-            btDemarrer: {
-                click: function() {
-					this.obj.demarrer();
-                }
-            },
-            btArreter: {
-                click: function() {
-					this.obj.arreter();
-                }
-            },
-            btPause: {
-                click: function() {
-					this.obj.pause();
-                }
-            },
-            btRedemarrer: {
-                click: function() {
-					this.obj.redemarrer();
-                }
-            }
-        };
-        window.addEventListener("load", function () {
-            Chrono.load();
-        });
-    }
+			select: {
+				change: function () {
+					self.appliquerTemps(document.getElementById("cadran"), self.prendreDuree() / 1000);
+				}
+			},
+			demarrer: {
+				click: function () {
+					self.demarrer();
+				}
+			},
+			pause: {
+				click: function () {
+					var cadran = document.getElementById("cadran");
+					if (this.value === "B") {
+						this.value = "D";
+						window.clearInterval(cadran.interval);
+					} else {
+						this.value = "B";
+						cadran.ajusterTemps(cadran, cadran.duree);
+						cadran.interval = window.setInterval(self.intTemps, 400);
+					}
+				}
+			},
+			stop: {
+				click: function () {
+					self.arreter();
+				}
+			}
+		};
+		window.addEventListener("load", function () {
+			App.header.appendChild(self.creerFormulaire());
+			App.header.appendChild(self.creerSon());
+			App.body.appendChild(self.creerCadran());
+			self.appliquerTemps(document.getElementById("cadran"));
+		});
+	}
 }
 Chrono.init();
