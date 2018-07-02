@@ -11,10 +11,11 @@ class App {
 		}
 		if (url.slice(-3) === ".js") {
 			element = document.createElement("script");
-			element.setAttribute("src", this.scriptPath + "/" + url);
+			element.setAttribute("src", this._scriptPath + "/" + url);
 		} else if (url.slice(-4) === ".css") {
 			element = document.createElement("link");
-			element.setAttribute("href", this.scriptPath + "/" + url);
+			console.log(this._scriptPath);
+			element.setAttribute("href", this._scriptPath + "/" + url);
 			element.setAttribute("rel", "stylesheet");
 		}
 		element.setAttribute("id", id);
@@ -22,6 +23,9 @@ class App {
 		this.dependencies[id] = element;
 		document.head.appendChild(element);
 		return this.dependencies[id];
+	}
+	static scriptUrl(file) {
+
 	}
 	static bind(element, evts) {
 		if (!evts) {
@@ -41,13 +45,27 @@ class App {
 		}
 		return this;
 	}
-	static setScriptPath() {
-		this.scriptURL = document.head.lastChild.getAttribute('src');
-		this.scriptPath = document.head.lastChild.getAttribute('src').split('/').slice(0,-1);
-		if (this.scriptPath.length === 0) {
-			this.scriptPath = ".";
+	static dirname(path) {
+		if (!path) {
+			return ".";
+		}
+		var resultat = path.split(/[\\\/]/g);
+		resultat.pop();
+		if (!resultat.length) {
+			return ".";
+		}
+		resultat = resultat.join("/");
+		return resultat;
+	}
+	static setPaths() {
+		debugger;
+		this._pageUrl = this.dirname(location.href);
+		this._scriptURL = document.head.lastChild.getAttribute('src');
+		this._scriptPath = document.head.lastChild.getAttribute('src').split('/').slice(0,-1);
+		if (this._scriptPath.length === 0) {
+			this._scriptPath = ".";
 		} else {
-			this.scriptPath = this.scriptPath.join("/");
+			this._scriptPath = this._scriptPath.join("/");
 		}
 		return this;
 	}
@@ -129,8 +147,8 @@ class App {
 	static init() {
 //		var self = this;
 		this.dependencies = {};
-		this.setScriptPath();
-		var data=this.parseUrl(this.scriptURL).data;
+		this.setPaths();
+		var data=this.parseUrl(this._scriptURL).data;
 		this.addDependency("Module.js");
 		for (let k in data) {
 			this.addDependency(k + ".js");
