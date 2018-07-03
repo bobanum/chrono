@@ -1,10 +1,12 @@
 /*jslint browser:true, esnext:true*/
-/*globals Module, Horloge*/
+/*globals Horloge, Module, App*/
 class Minuteur extends Module {
 	constructor() {
-		super();
 		this.debut = null;
 		this.duree = 60*3;
+	}
+	static dom_menuItem() {
+		return App.dom_menuItem("c", this.evt.menuAlarm);
 	}
 	dom_creer() {
 		var resultat = super.dom_creer();
@@ -80,6 +82,7 @@ class Minuteur extends Module {
 	}
 	static init() {
 		var self = this;
+		App.modules.push(this);
 
 		this.prototype.evt = {
 			select: {

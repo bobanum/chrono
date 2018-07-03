@@ -1,6 +1,9 @@
 /*jslint browser:true, esnext:true*/
 /*globals App, Module*/
-class Chrono extends Module {
+class Chrono extends Module{
+	static dom_menuItem() {
+		return App.dom_menuItem("b", this.evt.menuAlarm);
+	}
 	static creerCadran(secondes) {
 		var temps, span;
 		secondes = secondes || 0;
@@ -232,7 +235,14 @@ class Chrono extends Module {
 		sec += document.getElementById("selectsecondes").value * 1;
 		return sec * 1000;
 	}
+	static load() {
+//		App.header.appendChild(this.creerFormulaire());
+//		App.header.appendChild(this.creerSon());
+//		App.body.appendChild(this.creerCadran());
+//		this.appliquerTemps(document.getElementById("cadran"));
+	}
 	static init() {
+		App.modules.push(this);
 		var self = this;
 		this.sons = [
 			"Heyhey",
@@ -276,10 +286,7 @@ class Chrono extends Module {
 			}
 		};
 		window.addEventListener("load", function () {
-			App.header.appendChild(self.creerFormulaire());
-			App.header.appendChild(self.creerSon());
-			App.body.appendChild(self.creerCadran());
-			self.appliquerTemps(document.getElementById("cadran"));
+			Chrono.load();
 		});
 	}
 }
