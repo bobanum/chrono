@@ -1,12 +1,27 @@
 /*jslint esnext:true, browser:true*/
 /*exported App*/
 class App {
+	get dom() {
+		if (!this._dom) {
+			this.dom_creer();
+		}
+		return this._dom;
+	}
+	static get dom() {
+		if (!this._dom) {
+			this.dom_creer();
+		}
+		return this._dom;
+	}
+	static dom_creer() {
+		this._dom = this.dom_interface();
+	}
 	static dom_interface() {
 		var resultat;
 		resultat = document.createElement("div");
 		resultat.classList.add("interface");
 		this.header = resultat.appendChild(this.dom_header(this.dom_menu()));
-		this.body = resultat.appendChild(this.dom_body());
+//		this.body = resultat.appendChild(this.dom_body());
 		this.footer = resultat.appendChild(this.dom_footer());
 		return resultat;
 	}
@@ -290,7 +305,7 @@ class App {
 	}
 	static load() {
 //		debugger;
-		document.body.appendChild(this.dom_interface());
+		document.body.appendChild(this.dom);
 	}
 	static init() {
 		this.modules = [];

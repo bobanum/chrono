@@ -115,6 +115,7 @@ class Minuteur extends Module {
 			}
 		};
 		window.addEventListener("load", function () {
+			Minuteur.load();
 		});
 	}
 }

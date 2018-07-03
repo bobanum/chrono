@@ -236,6 +236,7 @@ class Chrono extends Module{
 		return sec * 1000;
 	}
 	static load() {
+		super.load();
 //		App.header.appendChild(this.creerFormulaire());
 //		App.header.appendChild(this.creerSon());
 //		App.body.appendChild(this.creerCadran());

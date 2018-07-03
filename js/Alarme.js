@@ -5,6 +5,7 @@ class Alarme extends Module {
 		return App.dom_menuItem("a", this.evt.menuAlarm);
 	}
 	static load() {
+		super.load();
 //		App.header.appendChild(this.creerFormulaire());
 //		App.header.appendChild(this.creerSon());
 //		App.body.appendChild(this.creerCadran());

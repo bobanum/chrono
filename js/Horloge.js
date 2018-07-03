@@ -2,11 +2,20 @@
 /*globals App, Module, Minuteur*/
 class Horloge extends Module {
 	static dom_menuItem() {
-		return App.dom_menuItem("d", this.evt.menuAlarm);
+		return App.dom_menuItem("d", this.evt.menu);
+	}
+	static dom_header(contenu) {
+		var resultat = document.createElement("header");
+		if (contenu) {
+			resultat.appendChild(contenu);
+		}
+		resultat.appendChild(document.createTextNode("dom_header (Horloge)"));
+		return resultat;
 	}
 	static load() {
-//		window.horloge = new this();
-//		document.body.appendChild(window.horloge.dom);
+		super.load();
+//		App.body.appendChild(this.dom);
+//		App.horloge = new this();
 //		window.horloge.header.appendChild(this.dom_menu());
 	}
 	static init() {
@@ -14,7 +23,7 @@ class Horloge extends Module {
 		this.evt = {
 			menu: {
 				click: function () {
-//					alert(1);
+					;
 				}
 			}
 		};
