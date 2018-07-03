@@ -73,6 +73,9 @@ section.module {
 *.body {
   flex: 1 0 auto;
 }
+div.body.module:not(.actif) {
+  display: none;
+}
 .interface {
   display: flex;
   flex-direction: column;
@@ -104,9 +107,19 @@ section.module {
   justify-content: space-evenly;
 }
 *.icones > * {
-  flex: 0 0 1.2em;
+  flex: 0 0 0;
+}
+*.icones > * > input {
+  display: none;
+}
+*.icones > * > :checked + label {
+  background-color: #ffffff;
+  color: black;
+}
+*.icones > * > label {
   height: 1.2em;
-  background-color: rgba(255, 255, 255, 0.2);
+  width: 2.2em;
+  box-sizing: border-box;
   padding: .1em;
   border-radius: .2em;
   margin: .1em;

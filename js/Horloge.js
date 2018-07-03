@@ -1,9 +1,6 @@
 /*jslint browser:true, esnext:true*/
 /*globals App, Module, Minuteur*/
 class Horloge extends Module {
-	static dom_menuItem() {
-		return App.dom_menuItem("d", this.evt.menu);
-	}
 	static dom_header(contenu) {
 		var resultat = document.createElement("header");
 		if (contenu) {
@@ -20,6 +17,8 @@ class Horloge extends Module {
 	}
 	static init() {
 		App.modules.push(this);
+		this.icone = "d";
+		this.label = this.name;
 		this.evt = {
 			menu: {
 				click: function () {

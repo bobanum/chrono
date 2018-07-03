@@ -5,9 +5,6 @@ class Minuteur extends Module {
 		this.debut = null;
 		this.duree = 60*3;
 	}
-	static dom_menuItem() {
-		return App.dom_menuItem("c", this.evt.menuAlarm);
-	}
 	dom_creer() {
 		var resultat = super.dom_creer();
 		this.header.appendChild(this.dom_formulaire());
@@ -83,6 +80,8 @@ class Minuteur extends Module {
 	static init() {
 		var self = this;
 		App.modules.push(this);
+		this.icone = "b";
+		this.label = this.name;
 
 		this.prototype.evt = {
 			select: {

@@ -1,9 +1,6 @@
 /*jslint browser:true, esnext:true*/
 /*globals App, Module*/
 class Chrono extends Module{
-	static dom_menuItem() {
-		return App.dom_menuItem("b", this.evt.menuAlarm);
-	}
 	static creerCadran(secondes) {
 		var temps, span;
 		secondes = secondes || 0;
@@ -244,17 +241,9 @@ class Chrono extends Module{
 	}
 	static init() {
 		App.modules.push(this);
+		this.icone = "c";
+		this.label = "Chronomètre";
 		var self = this;
-		this.sons = [
-			"Heyhey",
-			"Tubular Bell",
-			"Sabre Dance",
-			"Holiday",
-			"Borderline",
-			"Lucky Star",
-			"Tarkus",
-			"James Bond"
-		];
 
 		this.evt = {
 			select: {

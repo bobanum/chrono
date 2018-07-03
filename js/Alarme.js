@@ -1,9 +1,6 @@
 /*jslint browser:true, esnext:true*/
 /*globals App, Module*/
 class Alarme extends Module {
-	static dom_menuItem() {
-		return App.dom_menuItem("a", this.evt.menuAlarm);
-	}
 	static load() {
 		super.load();
 //		App.header.appendChild(this.creerFormulaire());
@@ -14,6 +11,8 @@ class Alarme extends Module {
 	static init() {
 		var self = this;
 		App.modules.push(this);
+		this.icone = "a";
+		this.label = this.name;
 
 		this.evt = {
 			select: {

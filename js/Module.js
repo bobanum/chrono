@@ -17,6 +17,30 @@ class Module {
 		}
 		return this._dom;
 	}
+	static dom_menuItem() {
+		var resultat, img;
+		resultat = document.createElement("li");
+		resultat.setAttribute("title", this.label);
+		var input = resultat.appendChild(document.createElement("input"));
+		input.setAttribute("type", "radio");
+		input.setAttribute("name", "radioModule");
+		input.setAttribute("id", "radioModule-" + this.name);
+		input.setAttribute("value", this.name);
+		input.obj = this;
+		img = resultat.appendChild(document.createElement("label"));
+		img.setAttribute("for", "radioModule-" + this.name);
+		img.appendChild(document.createTextNode(this.icone));
+//		App.bind(resultat, this.evt.menu);
+		input.addEventListener("change", function () {
+			if (this.form.actif) {
+				this.form.actif.obj.dom.classList.remove("actif");
+			}
+			this.form.actif = this;
+			this.obj.dom.classList.toggle("actif", this.checked);
+		});
+		return resultat;
+//		return App.dom_menuItem(this.icone, this.evt.menuAlarm);
+	}
 	static dom_creer() {
 		this._dom = this.dom_module();
 		this._dom.setAttribute("id", "module-" + this.name);
@@ -65,11 +89,11 @@ class Module {
 		return resultat;
 	}
 	static load() {
-		console.log(this.name);
 		App.dom.appendChild(this.dom);
 		this.dom.classList.add("body");
 	}
 	static init() {
+		this.icone = "a";
 		this.evt = {
 
 		};

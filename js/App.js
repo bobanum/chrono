@@ -33,7 +33,9 @@ class App {
 			resultat.appendChild(m.dom_menuItem());
 
 		}, this);
-		return resultat;
+		var form = document.createElement("form");
+		form.appendChild(resultat);
+		return form;
 	}
 	static dom_menuItem(label, evts) {
 		var resultat, img;
