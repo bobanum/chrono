@@ -308,6 +308,8 @@ class App {
 	static load() {
 //		debugger;
 		document.body.appendChild(this.dom);
+		document.getElementById("radio-module-Horloge").checked = true;
+		document.getElementById("radio-module-Horloge").dispatchEvent(new Event("change"));
 	}
 	static init() {
 		this.modules = [];

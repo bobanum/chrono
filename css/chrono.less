@@ -53,16 +53,42 @@ section.module {
 	align-items: center;
 }
 #module-Horloge {
-	border: 5px solid orange;
+//	border: 5px solid orange;
+	& > header, & > footer {
+		display: none;
+	}
+	& > .body {
+		display: flex;
+		& > * {
+			flex: 1 1 auto;
+			margin:1em;
+		}
+	}
+	.lignes {
+		stroke-width: .3;
+		stroke: yellow;
+		stroke-opacity: .5;
+	}
+	.heures {
+		fill:darkgrey;
+	}
+
+	.minutes {
+		fill:lightgrey;
+	}
+
+	.secondes {
+		fill:red;
+	}
 }
 #module-Alarme {
-	border: 5px solid red;
+//	border: 5px solid red;
 }
 #module-Chrono {
-	border: 5px solid lightgreen;
+//	border: 5px solid lightgreen;
 }
 #module-Minuteur {
-	border: 5px solid purple;
+//	border: 5px solid purple;
 }
 *.body {
 	flex: 1 0 auto;
@@ -188,4 +214,11 @@ input[type=button] {
 	margin:20px auto;
 	width:600px;
 	font-weight:bold;
+}
+text {
+	font-size: 7px;
+	font-family: arial;
+	line-height: 0;
+	letter-spacing: -.15em;
+	fill: white;
 }
