@@ -1,7 +1,5 @@
 /*jslint browser:true, esnext:true*/
-/*exported Chrono*/
-/*globals*/
-class Chrono {
+export default class Chrono {
     static dom_chrono() {
 		var resultat = document.createElement("div");
 		resultat.classList.add("chrono");
@@ -10,14 +8,14 @@ class Chrono {
         return resultat;
 	}
     static dom_temps() {
-        var resultat, span;
+        var resultat;
 		resultat = document.createElement("div");
         resultat.setAttribute("id", "temps");
-		span = resultat.appendChild(this.dom_nombre("heures"));
-        span = resultat.appendChild(this.dom_separateur());
-		span = resultat.appendChild(this.dom_nombre("minutes"));
-        span = resultat.appendChild(this.dom_separateur());
-		span = resultat.appendChild(this.dom_nombre("secondes"));
+		resultat.appendChild(this.dom_nombre("heures"));
+        resultat.appendChild(this.dom_separateur());
+		resultat.appendChild(this.dom_nombre("minutes"));
+        resultat.appendChild(this.dom_separateur());
+		resultat.appendChild(this.dom_nombre("secondes"));
 		this.temps = resultat;
 		resultat.obj = this;
         return resultat;
@@ -241,7 +239,7 @@ class Chrono {
         return sec * 1000;
     }
     static load() {
-        document.body.appendChild(this.dom_chrono());
+        document.querySelector(".home").appendChild(this.dom_chrono());
         this.appliquerTemps();
     }
     static init() {
@@ -272,4 +270,3 @@ class Chrono {
         });
     }
 }
-Chrono.init();

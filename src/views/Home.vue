@@ -1,0 +1,120 @@
+<template>
+  <div class="home">
+  </div>
+</template>
+
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+body {
+    font-family: verdana;
+    background-color: black;
+}
+#app, #app > .home {
+	height: 100%;
+}
+div.chrono {
+	display: flex;
+	flex-direction: column-reverse;
+	height: 100%;
+	justify-content: space-between;
+	&:after {
+		content: "";
+	}
+}
+fieldset[disabled] {
+	opacity: .3;
+}
+#temps {
+    font-size: 16vw;
+	font-weight: bold;
+    font-family:
+		'Share Tech Mono',
+		courier new,
+		monospace;
+    text-align: center;
+    color: white;
+    border-radius: .2em;
+    padding: .25em;
+    background-color: #333;
+	margin: 0 .2em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    & span.temps {
+		display: flex;
+		flex: 0 0 2.5ch;
+		align-items: center;
+		justify-content: center;
+		color: rgba(255, 255, 255, 0.9);
+        border-radius: .1em;
+        box-shadow: .04em .07em .07em rgba(0, 0, 0, 0.5) inset,
+			.01em .01em .01em rgba(255, 255, 255, 0.2),
+			-.01em -.01em .01em rgba(0, 0, 0, 0.2);
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.5),
+            rgba(255, 255, 255, 0) 50%,
+            rgba(0, 0, 0, 0) 50%,
+            rgba(0, 0, 0, 0.5)
+        ), radial-gradient(
+			2em 1em at center .15em,
+			rgba(255, 255, 255, 0.1) 50%,
+			rgba(0, 0, 0, 0) 50%
+		);
+        background-repeat: repeat-x;
+        background-position: left center;
+    }
+}
+form#duree {
+    background-color: #333;
+    color: #fff;
+    padding: 0em 1em;
+    font-weight: bold;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	& input[type=button] {
+        width: 7em;
+    }
+	& fieldset {
+		border: none;
+		margin: 0;
+		display: inline;
+	}
+	input[disabled] {
+		display: none;
+	}
+	select {
+		color: white;
+		padding: .5em;
+		border: 1px solid rgba(255, 255, 255, 0.5);
+	}
+	.separateur {
+		padding: 0 .2em;
+	}
+}
+#heures, #selectheures {
+    background-color: #600;
+}
+#minutes, #selectminutes {
+    background-color: #060;
+}
+#secondes, #selectsecondes {
+    background-color: #006;
+}
+</style>
+
+<script>
+import Chrono from '@/Chrono.js';
+Chrono.init();
+export default {
+  name: 'home',
+  components: {
+  }
+}
+</script>
