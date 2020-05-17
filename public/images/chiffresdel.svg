@@ -1,0 +1,85 @@
+<svg 
+	 width="54" 
+	 height="100" 
+	 viewBox="0 0 54 100" 
+	 xmlns="http://www.w3.org/2000/svg" 
+	 xmlns:xlink="http://www.w3.org/1999/xlink"
+	 version="1.1">
+	<defs>
+		<path id="h0" d="m10.254 0c-2.4523 0-4.8122 0.88829-6.666 2.4766l6.666 6.666h33.492l6.666-6.666c-1.8538-1.5883-4.2137-2.4766-6.666-2.4766z" />
+		<path id="h1" d="m10.254 45.428-4.5703 4.5723 4.5703 4.5723h33.492l4.5703-4.5723-4.5703-4.5723z" />
+		<path id="h2" d="m10.254 90.857-6.666 6.666c1.8539 1.5883 4.2137 2.4766 6.666 2.4766h33.492c2.4518 0 4.8104-0.8889 6.6641-2.4766l-6.6641-6.666z" />
+		<path id="v0" d="m2.4766 3.5879c-1.5883 1.8539-2.4766 4.2137-2.4766 6.666v34.062l4.5703 4.5723 4.5723-4.5723v-34.062z" />
+		<path id="v1" d="m51.523 3.5898-6.666 6.6641v34.062l4.5723 4.5723 4.5703-4.5723v-34.062c0-2.4518-0.8889-4.8104-2.4766-6.6641z" />
+		<path id="v2" d="m4.5703 51.111-4.5703 4.5723v34.062c0 2.4518 0.8889 4.8104 2.4766 6.6641l6.666-6.6641v-34.062z" />
+		<path id="v3" d="m49.428 51.111-4.5703 4.5723v34.062l6.666 6.6641c1.5877-1.8537 2.4766-4.2123 2.4766-6.6641v-34.062z" />
+		<g id="h">
+			<use xlink:href="#h0"/>
+			<use xlink:href="#h1"/>
+			<use xlink:href="#h2"/>
+		</g>
+		<g id="vg">
+			<use xlink:href="#v0"/>
+			<use xlink:href="#v2"/>
+		</g>
+		<g id="vd">
+			<use xlink:href="#v1"/>
+			<use xlink:href="#v3"/>
+		</g>
+		<g id="v">
+			<use xlink:href="#vg"/>
+			<use xlink:href="#vd"/>
+		</g>
+		<symbol id="separateur" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<circle cx="27" cy="27" r="8"></circle>
+			<circle cx="27" cy="73" r="8"></circle>
+		</symbol>
+		<symbol id="n0" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#v"/>
+			<use xlink:href="#h0"/>
+			<use xlink:href="#h2"/>
+		</symbol>
+		<symbol id="n1" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#vd"/>
+		</symbol>
+		<symbol id="n2" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#h"/>
+			<use xlink:href="#v1"/>
+			<use xlink:href="#v2"/>
+		</symbol>
+		<symbol id="n3" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#h"/>
+			<use xlink:href="#vd"/>
+		</symbol>
+		<symbol id="n4" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#vd"/>
+			<use xlink:href="#v0"/>
+			<use xlink:href="#h1"/>
+		</symbol>
+		<symbol id="n5" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#h"/>
+			<use xlink:href="#v0"/>
+			<use xlink:href="#v3"/>
+		</symbol>
+		<symbol id="n6" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#h"/>
+			<use xlink:href="#vg"/>
+			<use xlink:href="#v3"/>
+		</symbol>
+		<symbol id="n7" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#h0"/>
+			<use xlink:href="#vd"/>
+		</symbol>
+		<symbol id="n8" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#h"/>
+			<use xlink:href="#v"/>
+		</symbol>
+		<symbol id="n9" viewBox="0 0 54 100" preserveAspectRatio="none">
+			<use xlink:href="#vd"/>
+			<use xlink:href="#h"/>
+			<use xlink:href="#h0"/>
+		</symbol>
+	</defs>
+	<g class="chiffres">
+	</g>
+</svg>

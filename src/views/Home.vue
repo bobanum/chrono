@@ -1,6 +1,10 @@
 <template>
-  <div class="home">
-  </div>
+	<div class="home">
+		<minuteur/>
+	<svg style="width:2em; height:2em;fill:cyan;" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+		<use xlink:href="icones.svg#chrono"/>
+	</svg>
+	</div>
 </template>
 
 <style lang="scss">
@@ -11,8 +15,8 @@ html, body {
 	padding: 0;
 }
 body {
-    font-family: verdana;
-    background-color: black;
+	font-family: verdana;
+	background-color: black;
 }
 #app, #app > .home {
 	height: 100%;
@@ -30,57 +34,57 @@ fieldset[disabled] {
 	opacity: .3;
 }
 #temps {
-    font-size: 16vw;
+	font-size: 16vw;
 	font-weight: bold;
-    font-family:
+	font-family:
 		'Share Tech Mono',
 		courier new,
 		monospace;
-    text-align: center;
-    color: white;
-    border-radius: .2em;
-    padding: .25em;
-    background-color: #333;
+	text-align: center;
+	color: white;
+	border-radius: .2em;
+	padding: .25em;
+	background-color: #333;
 	margin: 0 .2em;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-    & span.temps {
+	& span.temps {
 		display: flex;
 		flex: 0 0 2.5ch;
 		align-items: center;
 		justify-content: center;
 		color: rgba(255, 255, 255, 0.9);
-        border-radius: .1em;
-        box-shadow: .04em .07em .07em rgba(0, 0, 0, 0.5) inset,
+		border-radius: .1em;
+		box-shadow: .04em .07em .07em rgba(0, 0, 0, 0.5) inset,
 			.01em .01em .01em rgba(255, 255, 255, 0.2),
 			-.01em -.01em .01em rgba(0, 0, 0, 0.2);
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.5),
-            rgba(255, 255, 255, 0) 50%,
-            rgba(0, 0, 0, 0) 50%,
-            rgba(0, 0, 0, 0.5)
-        ), radial-gradient(
+		background-image: linear-gradient(
+			rgba(255, 255, 255, 0.5),
+			rgba(255, 255, 255, 0) 50%,
+			rgba(0, 0, 0, 0) 50%,
+			rgba(0, 0, 0, 0.5)
+		), radial-gradient(
 			2em 1em at center .15em,
 			rgba(255, 255, 255, 0.1) 50%,
 			rgba(0, 0, 0, 0) 50%
 		);
-        background-repeat: repeat-x;
-        background-position: left center;
-    }
+		background-repeat: repeat-x;
+		background-position: left center;
+	}
 }
 form#duree {
-    background-color: #333;
-    color: #fff;
-    padding: 0em 1em;
-    font-weight: bold;
+	background-color: #333;
+	color: #fff;
+	padding: 0em 1em;
+	font-weight: bold;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
 	& input[type=button] {
-        width: 7em;
-    }
+		width: 7em;
+	}
 	& fieldset {
 		border: none;
 		margin: 0;
@@ -99,22 +103,24 @@ form#duree {
 	}
 }
 #heures, #selectheures {
-    background-color: #600;
+	background-color: #600;
 }
 #minutes, #selectminutes {
-    background-color: #060;
+	background-color: #060;
 }
 #secondes, #selectsecondes {
-    background-color: #006;
+	background-color: #006;
 }
 </style>
 
 <script>
 import Chrono from '@/Chrono.js';
+import Minuteur from '@/components/minuteur/Minuteur';
 Chrono.init();
 export default {
-  name: 'home',
-  components: {
-  }
+	name: 'home',
+	components: {
+		Minuteur,
+	}
 }
 </script>
