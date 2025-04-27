@@ -1,0 +1,29 @@
+chrono-nombre {
+
+	--color: darkorange;
+	flex: 0 0 2.5ch;
+
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 1ch);
+	grid-template-rows: repeat(auto-fill, 100%);
+	align-items: center;
+	justify-content: center;
+	color: rgba(255, 255, 255, 0.9);
+	border-radius: .1em;
+	box-shadow: .04em .07em .07em rgba(0, 0, 0, 0.5) inset,
+		.01em .01em .01em rgba(255, 255, 255, 0.2),
+		-.01em -.01em .01em rgba(0, 0, 0, 0.2);
+	background-image: linear-gradient(
+		rgba(255, 255, 255, 0.5),
+		rgba(255, 255, 255, 0) 50%,
+		rgba(0, 0, 0, 0) 50%,
+		rgba(0, 0, 0, 0.5)
+	), radial-gradient(
+		2em 1em at center .15em,
+		rgba(255, 255, 255, 0.1) 50%,
+		rgba(0, 0, 0, 0) 50%
+	);
+	background-color: var(--color);
+	background-repeat: repeat-x;
+	background-position: left center;
+}

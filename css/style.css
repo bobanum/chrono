@@ -1,0 +1,96 @@
+@import url('chrono.css');
+@import url('nombre.css');
+
+.horloge {
+	--r: 3.25em;
+	width: 100vw;
+	height: 100vh;
+	display: grid;
+	place-items: center;
+	perspective-origin: center top;
+	perspective: 12in;
+}
+
+.flaps {
+	background-color: #f00;
+	transform-origin: 0 0 0;
+	transform-style: preserve-3d;
+	display: grid;
+	font-size: 16vh;
+	width: 3.5ch;
+	height: 1.25em;
+
+	transition: transform 1s;
+	transform-origin: center;
+	transform: rotateX(0deg);
+
+	&:hover {
+		transform: rotateY(180deg);
+	}
+
+	.flap {
+		place-self: stretch;
+		display: grid;
+		place-items: center;
+		grid-row: 1;
+		grid-column: 1;
+		background-color: #6668;
+		color: #fff;
+		box-shadow: inset 1px 1px #fff8, inset -1px -1px #000;
+		transform: rotateY(var(--a)) translateZ(var(--r));
+		transition: transform 1s;
+		backface-visibility: hidden;
+		/* &:hover {
+			transform: rotateY(var(--a));
+		} */
+		transform-origin: center;
+
+		&:nth-child(1) {
+			--a: 0deg;
+		}
+
+		&:nth-child(2) {
+			--a: 30deg;
+		}
+
+		&:nth-child(3) {
+			--a: 60deg;
+		}
+
+		&:nth-child(4) {
+			--a: 90deg;
+		}
+
+		&:nth-child(5) {
+			--a: 120deg;
+		}
+
+		&:nth-child(6) {
+			--a: 150deg;
+		}
+
+		&:nth-child(7) {
+			--a: 180deg;
+		}
+
+		&:nth-child(8) {
+			--a: 210deg;
+		}
+
+		&:nth-child(9) {
+			--a: 240deg;
+		}
+
+		&:nth-child(10) {
+			--a: 270deg;
+		}
+
+		&:nth-child(11) {
+			--a: 300deg;
+		}
+
+		&:nth-child(12) {
+			--a: 330deg;
+		}
+	}
+}

@@ -1,7 +1,5 @@
-/*jslint browser:true, esnext:true*/
-/*exported Chrono*/
-/*globals*/
-class Chrono {
+import "./Nombre.js";
+export default class Chrono {
     static dom_chrono() {
 		var resultat = document.createElement("div");
 		resultat.classList.add("chrono");
@@ -13,11 +11,14 @@ class Chrono {
         var resultat, span;
 		resultat = document.createElement("div");
         resultat.setAttribute("id", "temps");
-		span = resultat.appendChild(this.dom_nombre("heures"));
+		span = resultat.appendChild(document.createElement("chrono-nombre"));
+		span.id = "heures";
         span = resultat.appendChild(this.dom_separateur());
-		span = resultat.appendChild(this.dom_nombre("minutes"));
+		span = resultat.appendChild(document.createElement("chrono-nombre"));
+		span.id = "minutes";
         span = resultat.appendChild(this.dom_separateur());
-		span = resultat.appendChild(this.dom_nombre("secondes"));
+		span = resultat.appendChild(document.createElement("chrono-nombre"));
+		span.id = "secondes";
 		this.temps = resultat;
 		resultat.obj = this;
         return resultat;
@@ -40,23 +41,7 @@ class Chrono {
 		resultat.obj = this;
         return resultat;
     }
-	static dom_nombre(id, n) {
-		var resultat, span;
-		n = n || 0;
-		resultat = document.createElement("span");
-		resultat.classList.add("temps");
-		if (id) {
-			resultat.setAttribute("id", id);
-		}
-		span = resultat.appendChild(document.createElement("span"));
-		span.classList.add("dizaines");
-		span.innerHTML = Math.floor(n / 10);
-		span = resultat.appendChild(document.createElement("span"));
-		span.classList.add("unites");
-		span.innerHTML = n % 10;
-		return resultat;
-	}
-    static dom_boutons() {
+	static dom_boutons() {
         var resultat;
 		resultat = document.createElement("fieldset");
 		resultat.classList.add("boutons");
@@ -215,13 +200,13 @@ class Chrono {
         }
 		var t;
         t = this.formatInt(temps, 3600);
-        document.getElementById('heures').textContent = t;
+        document.getElementById('heures').value = t;
 
         t = this.formatInt(temps, 60, 60);
-        document.getElementById('minutes').textContent = t;
+        document.getElementById('minutes').value = t;
 
         t = this.formatInt(temps, 1, 60);
-        document.getElementById('secondes').textContent = t;
+        document.getElementById('secondes').value = t;
     }
 	static formatInt(int, div, mod) {
 		var resultat;
@@ -240,7 +225,11 @@ class Chrono {
         sec += document.getElementById("selectsecondes").value * 1;
         return sec * 1000;
     }
-    static load() {
+    static minuteur() {
+        document.body.appendChild(this.dom_chrono());
+        this.appliquerTemps();
+    }
+    static horloge() {
         document.body.appendChild(this.dom_chrono());
         this.appliquerTemps();
     }
@@ -271,5 +260,26 @@ class Chrono {
             Chrono.load();
         });
     }
+	static evt = {
+		btDemarrer: {
+			click: function() {
+				this.obj.demarrer();
+			}
+		},
+		btArreter: {
+			click: function() {
+				this.obj.arreter();
+			}
+		},
+		btPause: {
+			click: function() {
+				this.obj.pause();
+			}
+		},
+		btRedemarrer: {
+			click: function() {
+				this.obj.redemarrer();
+			}
+		}
+	};
 }
-Chrono.init();
